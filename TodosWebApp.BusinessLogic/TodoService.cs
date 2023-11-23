@@ -20,5 +20,25 @@ namespace TodosWebApp.BusinessLogic
         {
             return await _todoRepository.GetAllAsync();
         }
+
+        public async Task<Todo> GetById(int id)
+        {
+            return await _todoRepository.GetById(id);
+        }
+
+        public async Task RemoveAsync(int id)
+        {
+            await _todoRepository.RemoveAsync(id);
+        }
+
+        public async Task SaveAsync(Todo todo)
+        {
+            await _todoRepository.SaveAsync(todo);
+        }
+
+        public async Task UpdateAsync(Todo todo)
+        {
+            await _todoRepository.UpdateAsync(todo);
+        }
     }
 }
