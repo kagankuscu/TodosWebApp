@@ -30,15 +30,45 @@ namespace TodosWebApp.Web.Controllers
             List<Todo> todos = await _todoService.GetAllAsync();
             todos = todos.OrderByDescending(x=>x.CreatedDate).ToList();
             List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
-            return View(todosVM);
+            return View();
         }
-
+        [HttpGet]
         public async Task<IActionResult> History()
         {
             List<Todo> todos = await _todoService.GetAllAsync();
             todos = todos.OrderByDescending(x=>x.CreatedDate).ToList();
             List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View(todosVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(TodoViewModel todoViewModel)
+        {
+            todoViewModel.CreatedDate = DateTime.Now;
+            await _todoService.SaveAsync(_mapper.Map<Todo>(todoViewModel));
+            return RedirectToAction("index");
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Remove(int id)
+        {
+            await _todoService.RemoveAsync(id);
+            return RedirectToAction("index");
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Update(int id)
+        {
+            Todo todo = await _todoService.GetById(id);
+            return View(_mapper.Map<TodoViewModel>(todo));
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Update(TodoViewModel updateTodo)
+        {
+            await _todoService.UpdateAsync(_mapper.Map<Todo>(updateTodo));
+
+            return RedirectToAction("index");
         }
     }
 }
