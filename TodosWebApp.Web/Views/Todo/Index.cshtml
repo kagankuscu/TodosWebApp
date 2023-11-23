@@ -35,8 +35,10 @@
                     @model List<Todo>
                     @foreach(Todo todo in Model)
                     {
-                        <vc:todo-list></vc:todo-list>   
+                        <vc:todo-list todo=todo></vc:todo-list>
                     }
+
+                    <vc:todo-list></vc:todo-list>
                 </div>
             </div>
         </div>
