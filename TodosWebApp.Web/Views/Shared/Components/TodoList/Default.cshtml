@@ -1,24 +1,27 @@
-@model TodoViewModel
+@model List<TodoViewModel>
 
-<ul class="list-group list-group-horizontal rounded-0 bg-transparent">
-    <li class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
-        <div class="form-check">
-            <input class="form-check-input me-0" type="checkbox" value="" id="flexCheckChecked1" aria-label="..." checked=@Model.IsDone/>
-        </div>
-    </li>
-    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-        <p class="lead fw-normal mb-0">@Model.Name</p>
-    </li>
-    <li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
-        <div class="d-flex flex-row justify-content-end mb-1">
-            <a href="#!" class="text-info" data-mdb-toggle="tooltip" title="Edit todo"><i
-                    class="bi bi-pencil-fill me-3"></i></a>
-            <a class="text-danger" data-mdb-toggle="tooltip" title="Delete todo" asp-controller="home" asp-action="remove" asp-route-id="@Model.Id">
-                <i class="bi bi-trash-fill"></i>
-            </a>
-        </div>
-        <div class="text-end text-muted">
-            <p class="small mb-0">@Model.CreatedDate.ToShortDateString()</p> 
-        </div>
-    </li>
-</ul> 
+@foreach(var todo in @Model)
+{
+    <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+        <li class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
+            <div class="form-check">
+                <input class="form-check-input me-0" type="checkbox" value="" id="flexCheckChecked1" aria-label="..." checked=@todo.IsDone/>
+            </div>
+        </li>
+        <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+            <p class="lead fw-normal mb-0">@todo.Name</p>
+        </li>
+        <li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+            <div class="d-flex flex-row justify-content-end mb-1">
+                <a asp-controller="todo" asp-action="update" asp-route-id="@todo.Id" class="text-info" data-mdb-toggle="tooltip" title="Edit todo"><i
+                        class="bi bi-pencil-fill me-3"></i></a>
+                <a class="text-danger" data-mdb-toggle="tooltip" title="Delete todo" asp-controller="todo" asp-action="remove" asp-route-id="@todo.Id">
+                    <i class="bi bi-trash-fill"></i>
+                </a>
+            </div>
+            <div class="text-end text-muted">
+                <p class="small mb-0">@todo.CreatedDate.ToShortDateString()</p> 
+            </div>
+        </li>
+    </ul>    
+}

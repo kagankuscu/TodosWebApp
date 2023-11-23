@@ -1,6 +1,7 @@
 @{
-    ViewBag.title = "History";
+    ViewBag.title = "Update";
 }
+@model TodoViewModel
 
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -8,10 +9,9 @@
             <div class="card" id="list1" style="border-radius: .75rem; background-color: #eff1f2;">
                 <div class="card-body py-4 px-4 px-md-5">
                     
-                    <partial name="_Header" model="@ViewBag.title" />
-                    <hr class="my-4">
+                <partial name="_Header" model="@ViewBag.title" />
+                <vc:form action="Update" form-model="@Model"></vc:form>
 
-                    <vc:todo-list type=2></vc:todo-list>
                 </div>
             </div>
         </div>
