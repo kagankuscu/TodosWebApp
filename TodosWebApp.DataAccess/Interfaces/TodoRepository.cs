@@ -21,5 +21,33 @@ namespace TodosWebApp.DataAccess.Interfaces
         {
             return await _context.Todos.ToListAsync();
         }
+
+        public async Task RemoveAsync(int id)
+        {
+            Todo todo = await _context.Todos.FindAsync(id);
+            if (todo is not null)
+            {
+                _context.Todos.Remove(todo);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task SaveAsync(Todo todo)
+        {
+            await _context.Todos.AddAsync(todo);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Todo todo)
+        {
+            _context.Todos.Update(todo);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Todo> GetById(int id)
+        {
+            Todo todo = await _context.Todos.FindAsync(id); 
+            return todo;
+        }
     }
 }

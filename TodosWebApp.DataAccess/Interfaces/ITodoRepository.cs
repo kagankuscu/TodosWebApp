@@ -9,5 +9,9 @@ namespace TodosWebApp.DataAccess.Interfaces
     public interface ITodoRepository
     {
         Task<List<Todo>> GetAllAsync();
+        Task<Todo> GetById(int id);
+        Task SaveAsync(Todo todo);
+        Task RemoveAsync(int id);
+        Task UpdateAsync(Todo todo);
     }
 }
