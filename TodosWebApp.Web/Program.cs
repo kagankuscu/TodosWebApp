@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using TodosWebApp.BusinessLogic;
 using TodosWebApp.DataAccess.Data;
@@ -13,7 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options=>
 });
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<ITodoService, TodoService>();
-
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,8 +32,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+// app.MapControllerRoute(
+//     name: "default",
+//     pattern: "{controller=Todo}/{action=Index}/{id?}");
+
+app.MapControllers();
 
 app.Run();
