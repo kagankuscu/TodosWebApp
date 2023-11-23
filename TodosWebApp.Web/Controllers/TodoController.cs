@@ -8,6 +8,7 @@ using TodosWebApp.DataAccess.Entities;
 
 namespace TodosWebApp.Web.Controllers
 {
+    [Route("[controller]/[action]")]
     public class TodoController : Controller
     {
         private readonly ITodoService _todoService;
@@ -17,7 +18,16 @@ namespace TodosWebApp.Web.Controllers
             _todoService = todoService;
         }
 
+        [Route("/")]
+        [Route("/todo")]
+        [Route("/todo/index")]
         public async Task<IActionResult> Index()
+        {
+            List<Todo> todo = await _todoService.GetAllAsync();
+            return View(todo.OrderByDescending(x=>x.CreatedDate).ToList());
+        }
+
+        public async Task<IActionResult> History()
         {
             List<Todo> todo = await _todoService.GetAllAsync();
             return View(todo);
