@@ -1,0 +1,28 @@
+@model TodoViewModel
+
+<form asp-controller="todo" asp-action="@ViewBag.title" method="post">
+    <div class="pb-2">
+        <div class="card">
+            <div class="card-body">
+                    <div class="d-flex flex-row align-items-center">
+                        <input type="text" class="form-control form-control-lg" placeholder="Add new..." asp-for="@Model.Name">
+                        <span class="text-danger" ></span>
+                        <div>
+                            <input type="submit" class="btn btn-primary" value="@ViewBag.title" />
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="pb-2">
+        <div class="card">
+            <div class="card-body">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="input-group">
+                            <input type="datetime-local" asp-for="@Model.CreatedDate" class="form-control form-control-lg">
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>      
+</form>
