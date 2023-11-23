@@ -9,8 +9,8 @@
                     </p>
                     <hr class="my-4">
 
-                    @model List<Todo>
-                    @foreach (Todo todo in Model)
+                    @model List<TodoViewModel>
+                    @foreach (TodoViewModel todo in Model)
                     {
                         <vc:todo-list todo=todo></vc:todo-list>
                     }
