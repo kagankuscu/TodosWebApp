@@ -12,7 +12,6 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(string action, TodoViewModel formModel)
         {
             ViewBag.title = action;
-            // TodoViewModel todoViewModel = null;
             return View(formModel);
         }
     }
