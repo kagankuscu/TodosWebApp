@@ -44,7 +44,7 @@ namespace TodosWebApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(TodoViewModel todoViewModel)
         {
-            todoViewModel.CreatedDate = DateTime.Now;
+            // todoViewModel.CreatedDate = DateTime.Now;
             await _todoService.SaveAsync(_mapper.Map<Todo>(todoViewModel));
             return RedirectToAction("index");
         }
@@ -69,6 +69,13 @@ namespace TodosWebApp.Web.Controllers
             await _todoService.UpdateAsync(_mapper.Map<Todo>(updateTodo));
 
             return RedirectToAction("index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateIsDone(TodoViewModel updateTodoVM)
+        {
+            await _todoService.UpdateAsync(_mapper.Map<Todo>(updateTodoVM));
+            return Json(new { UptadedTodo = updateTodoVM });
         }
     }
 }
