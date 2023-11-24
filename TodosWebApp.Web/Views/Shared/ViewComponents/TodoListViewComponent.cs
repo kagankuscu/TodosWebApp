@@ -28,7 +28,7 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
 
             if (type == 1)
             {
-                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderByDescending(x=>x.DueDate).ToList());
+                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.Where(x=>x.DueDate.ToShortDateString() == DateTime.Today.ToShortDateString()).OrderByDescending(x=>x.DueDate).ToList());
             }
             if (type == 2)
             {
