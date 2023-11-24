@@ -3,6 +3,39 @@
 }
 @model TodoViewModel
 
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            
+        })
+
+        function MyFunction(id)
+        {
+            jsonData = {
+                id: id,
+                name: $("#name"+id).text(),
+                isDone: $("#isDone"+id).is(":checked"),
+                dueDate: $("#dueDate"+id).text(),
+                createdDate: $("#createdDate" + id).text()
+            }
+
+            console.log(jsonData);
+
+            $.ajax({
+                type: "POST",
+                url: "/todo/updateisdone",
+                data: jsonData,
+                error: function(error)
+                {
+                    alert(error);
+                }
+            });
+        }
+    </script>
+}
+
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">

@@ -70,5 +70,12 @@ namespace TodosWebApp.Web.Controllers
 
             return RedirectToAction("index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateIsDone(TodoViewModel updateTodoVM)
+        {
+            await _todoService.UpdateAsync(_mapper.Map<Todo>(updateTodoVM));
+            return Json(new { UptadedTodo = updateTodoVM });
+        }
     }
 }
