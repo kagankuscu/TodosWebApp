@@ -28,11 +28,11 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
 
             if (type == 1)
             {
-                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderByDescending(x=>x.CreatedDate).ToList());
+                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderByDescending(x=>x.DueDate).ToList());
             }
             if (type == 2)
             {
-                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderBy(x=>x.CreatedDate).TakeWhile(x=>x.CreatedDate < DateTime.Now).OrderByDescending(x=>x.CreatedDate).ToList());
+                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderBy(x=>x.DueDate).TakeWhile(x=>x.DueDate < DateTime.Now).OrderByDescending(x=>x.CreatedDate).ToList());
             }
             return View(todoViewModels);
         }
