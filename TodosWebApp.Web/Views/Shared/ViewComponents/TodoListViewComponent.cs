@@ -32,7 +32,7 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
             }
             if (type == 2)
             {
-                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderBy(x=>x.DueDate).TakeWhile(x=>x.DueDate < DateTime.Now).OrderByDescending(x=>x.CreatedDate).ToList());
+                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderBy(x=>x.DueDate).TakeWhile(x=>x.DueDate < DateTime.Now.AddDays(-1)).OrderByDescending(x=>x.CreatedDate).ToList());
             }
             return View(todoViewModels);
         }
