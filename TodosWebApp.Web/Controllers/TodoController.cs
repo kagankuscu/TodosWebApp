@@ -41,6 +41,12 @@ namespace TodosWebApp.Web.Controllers
             return View(todosVM);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Upcoming()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add(TodoViewModel todoViewModel)
         {
