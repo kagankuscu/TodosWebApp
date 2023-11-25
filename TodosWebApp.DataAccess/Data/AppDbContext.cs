@@ -9,8 +9,11 @@ namespace TodosWebApp.DataAccess.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {}
+        
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=localhost; Database=TodoDB; User Id=SA; Password=reallyStrongPwd123;TrustServerCertificate=True;MultiSubnetFailover=True;");
+        }
 
         public DbSet<Todo> Todos { get; set; }
     }
