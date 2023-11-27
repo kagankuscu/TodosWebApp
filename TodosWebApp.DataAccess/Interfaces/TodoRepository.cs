@@ -49,5 +49,22 @@ namespace TodosWebApp.DataAccess.Interfaces
             Todo todo = await _context.Todos.FindAsync(id); 
             return todo;
         }
+
+        public async Task<List<Todo>> GetTodayTaskAsync()
+        {
+            return await _context.Todos.Where(x => x.DueDate.Date == DateTime.Today).OrderByDescending(x => x.DueDate).ToListAsync();
+        }
+
+        public async Task<List<Todo>> GetUpcomingTaskAsync()
+        {
+            // todos.Where(x=>x.DueDate > DateTime.Now).OrderByDescending(x=>x.DueDate).ToList()
+            return await _context.Todos.Where(todo => todo.DueDate.Date > DateTime.Today).OrderByDescending(todo => todo.DueDate).ToListAsync();
+        }
+
+        public Task<List<Todo>> GetHistoryTaskAsync()
+        {
+            // todos.OrderBy(x=>x.DueDate).TakeWhile(x=>x.DueDate < DateTime.Now.AddDays(-1)).OrderByDescending(x=>x.DueDate).ToList()
+            return _context.Todos.Where(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1)).OrderByDescending(todo => todo.DueDate).ToListAsync();
+        }
     }
 }

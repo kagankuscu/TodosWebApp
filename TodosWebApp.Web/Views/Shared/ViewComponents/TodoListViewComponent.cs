@@ -28,15 +28,15 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
 
             if (type == 1)
             {
-                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.Where(x=>x.DueDate.ToShortDateString() == DateTime.Today.ToShortDateString()).OrderByDescending(x=>x.DueDate).ToList());
+                todoViewModels = _mapper.Map<List<TodoViewModel>>(await _todoService.GetTodayTaskAsync());
             }
             if (type == 2)
             {
-                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.OrderBy(x=>x.DueDate).TakeWhile(x=>x.DueDate < DateTime.Now.AddDays(-1)).OrderByDescending(x=>x.DueDate).ToList());
+                todoViewModels = _mapper.Map<List<TodoViewModel>>(await _todoService.GetHistoryTaskAsync());
             }
             if (type == 3)
             {
-                todoViewModels = _mapper.Map<List<TodoViewModel>>(todos.Where(x=>x.DueDate > DateTime.Now).OrderByDescending(x=>x.DueDate).ToList());
+                todoViewModels = _mapper.Map<List<TodoViewModel>>(await _todoService.GetUpcomingTaskAsync());
             }
             return View(todoViewModels);
         }
