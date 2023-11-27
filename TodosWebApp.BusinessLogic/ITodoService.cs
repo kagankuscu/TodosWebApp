@@ -14,5 +14,9 @@ namespace TodosWebApp.BusinessLogic
         Task RemoveAsync(int id);
         Task UpdateAsync(Todo todo);
 
+        Task<List<Todo>> GetTodayTaskAsync();
+        Task<List<Todo>> GetUpcomingTaskAsync();
+        Task<List<Todo>> GetHistoryTaskAsync();
+
     }
 }

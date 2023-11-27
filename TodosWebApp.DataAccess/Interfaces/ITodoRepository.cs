@@ -13,5 +13,8 @@ namespace TodosWebApp.DataAccess.Interfaces
         Task SaveAsync(Todo todo);
         Task RemoveAsync(int id);
         Task UpdateAsync(Todo todo);
+        Task<List<Todo>> GetTodayTaskAsync();
+        Task<List<Todo>> GetUpcomingTaskAsync();
+        Task<List<Todo>> GetHistoryTaskAsync();
     }
 }
