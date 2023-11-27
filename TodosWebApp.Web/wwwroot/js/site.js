@@ -23,3 +23,8 @@ function MyFunction(id)
         }
     });
 }
+
+$(document).ready(function ()
+{
+    $("#table").DataTable({});
+});
