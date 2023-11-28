@@ -95,6 +95,20 @@
             });
         }
 
+        function removeTask(id) {
+            $.ajax({
+                type: "POST",
+                url: `/todo/removeAJAX/${id}`,
+                success: (data) => {
+                    toastr.success(`The task was removed successfully.`);
+                    DataTable.ajax.reload();
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            })
+        }
+
         function nameHtml(data, row) {
             return `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
                          <p id="name${row.id}" class="lead fw-normal mb-0">${data}</p>
@@ -112,7 +126,7 @@
             <div class="d-flex flex-row justify-content-center mb-1">
                         <a href="/todo/update/${row.id}" class="text-info" data-mdb-toggle="tooltip" title="Edit todo"><i
                                 class="bi bi-pencil-fill me-3"></i></a>
-                        <a href="/todo/remove/${row.id}" class="text-danger" data-mdb-toggle="tooltip" title="Delete todo" asp-controller="todo" asp-action="remove">
+                        <a onClick="removeTask(${row.id})" class="text-danger" data-mdb-toggle="tooltip" title="Delete todo" asp-controller="todo" asp-action="remove">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </div>
