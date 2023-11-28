@@ -96,15 +96,32 @@
         }
 
         function removeTask(id) {
-            $.ajax({
-                type: "POST",
-                url: `/todo/removeAJAX/${id}`,
-                success: (data) => {
-                    toastr.success(`The task was removed successfully.`);
-                    DataTable.ajax.reload();
-                },
-                error: (error) => {
-                    console.log(error);
+
+            Swal.fire({
+                title: 'Warning!',
+                text: 'Do you want to continue',
+                icon: 'warning',
+                confirmButtonText: 'Yes',
+                showCancelButton: true
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Task has been deleted.",
+                        icon: "success"
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: `/todo/removeAJAX/${id}`,
+                        success: (data) => {
+                            toastr.success(`The task was removed successfully.`);
+                            DataTable.ajax.reload();
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    })
                 }
             })
         }
