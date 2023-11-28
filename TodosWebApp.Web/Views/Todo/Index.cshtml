@@ -13,10 +13,115 @@
                     <vc:form action="Add" form-model="@Model"></vc:form>
                     <br class="my-4">
                     
-                    <vc:todo-list></vc:todo-list>
+                    @* <vc:todo-list></vc:todo-list> *@
+                    <table class="table" id="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">Done</th>
+                            <th scope="col">Task</th>
+                            <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
 
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts 
+{
+    <script>
+        var DataTable;
+        console.log("Index page");
+        refillData();
+
+        function refillData() {
+                DataTable = $("#table").DataTable(
+                {
+                    ajax: "/todo/GetTodayTask",
+                    columns: [
+                        { 
+                            data: "isDone",
+                            render: (data, type, row) => {
+                                return isDoneHtml(data, row);
+                            }
+                        },
+                        { 
+                            data: "name",
+                            render: (data, _, row) => {
+                                return nameHtml(data, row);
+                            }
+                        },
+                        { 
+                            data: "dueDate",
+                            render: (data, type, row) => {
+                                return actionHtml(data, row);
+                            }
+                        }
+                    ]
+                }
+            );
+        }
+
+        function updateIsDone(id)
+        {
+            jsonData = {
+                id: id,
+                name: $("#name"+id).text(),
+                isDone: $("#isDone"+id).is(":checked"),
+                dueDate: $("#dueDate"+id).text(),
+                createdDate: $("#createdDate" + id).text()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/todo/updateisdone",
+                data: jsonData,
+                success: (data) => {
+                    if (data["uptadedTodo"]["isDone"]) {
+                        toastr.success(`The recording was done successfully.`);
+                    }
+                    else {
+                        toastr.success(`The registration was successfully retrieved.`);
+                    }
+                    DataTable.ajax.reload();
+                },
+                error: function(error)
+                {
+                    alert(error);
+                }
+            });
+        }
+
+        function nameHtml(data, row) {
+            return `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                         <p id="name${row.id}" class="lead fw-normal mb-0">${data}</p>
+                     </li>`;
+        }
+        function isDoneHtml(data, row) {
+            return `<li class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
+         <div class="form-check">
+             <input id="isDone${row.id}" class="form-check-input me-0" type="checkbox" aria-label="..." onclick="updateIsDone(${row.id})" ${data == true ? 'checked' : "" } />
+         </div>
+                  </li>`;
+        }
+        function actionHtml(data, row) {
+            return `<li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+            <div class="d-flex flex-row justify-content-center mb-1">
+                        <a href="/todo/update/${row.id}" class="text-info" data-mdb-toggle="tooltip" title="Edit todo"><i
+                                class="bi bi-pencil-fill me-3"></i></a>
+                        <a href="/todo/remove/${row.id}" class="text-danger" data-mdb-toggle="tooltip" title="Delete todo" asp-controller="todo" asp-action="remove">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                    <div class="text-center text-muted">
+                        <p class="small mb-0">${data}</p>
+                        <span id="dueDate${row.id}" hidden="hidden">${data}</span>
+                        <span id="createdDate${row.id}" hidden="hidden">${data}</span>
+                    </div>
+                </li>`;
+        }
+    </script>
+}
