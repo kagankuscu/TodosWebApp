@@ -32,6 +32,28 @@ namespace TodosWebApp.Web.Controllers
             List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View();
         }
+        public async Task<IActionResult> GetTodayTask()
+        {
+            // data for datatable library
+            return Json(new 
+            {
+                data = await _todoService.GetTodayTaskAsync()
+            });
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> RemoveAJAX(int id)
+        {
+            Todo todo = await _todoService.GetById(id);
+            if(todo != null)
+            {
+                await _todoService.RemoveAsync(id);
+                return Json(new { Success = true, Message = $"The Task was removed successfuly. {todo.Id}" });
+            }
+
+            return Json(new { Success = false, Error = new { Message = $"{id} was not found."} });
+        }
+
         [HttpGet]
         public async Task<IActionResult> History()
         {
