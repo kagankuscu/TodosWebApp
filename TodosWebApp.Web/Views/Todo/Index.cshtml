@@ -10,7 +10,36 @@
                 <div class="card-body py-4 px-4 px-md-5">
 
                     <partial name="_Header" model="@ViewBag.title" />
-                    <vc:form action="Add" form-model="@Model"></vc:form>
+
+                    <form id="form" asp-controller="todo" asp-action="add" method="post">
+                        <div class="pb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <input type="text" class="form-control form-control-lg" placeholder="Add new..." asp-for="@Model.Name" required="">
+                                            <span class="text-danger" ></span>
+                                            <div>
+                                                <input type="submit" class="btn btn-primary" value="@ViewBag.title" />
+                                                <input type="hidden" asp-for="@Model.IsDone" />
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div class="input-group">
+                                                <input type="datetime-local" asp-for="@Model.DueDate" class="form-control form-control-lg">
+                                                <input type="hidden" asp-for="@Model.CreatedDate">
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>      
+                    </form>
+
                     <br class="my-4">
                     
                     @* <vc:todo-list></vc:todo-list> *@
@@ -154,5 +183,16 @@
                     </div>
                 </li>`;
         }
+
+        $(function () {
+            $('#form').parsley().on('field:validated', function() {
+                    var ok = $('.parsley-error').length === 0;
+                    console.log(`Parsley ${ok}`);
+                    $('.bs-callout-warning').toggleClass('hidden', ok);
+                })
+                .on('form:submit', function() {
+                    return true;
+                });
+            });
     </script>
 }
