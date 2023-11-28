@@ -32,6 +32,17 @@ namespace TodosWebApp.Web.Controllers
             List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View();
         }
+
+        [HttpGet("{pageSize}")]
+        public async Task<IActionResult> GetTodayTask(int pageSize)
+        {
+            // data for datatable library
+            return Json(new 
+            {
+                data = await _todoService.GetTodayTaskAsync()
+            });
+        }
+
         [HttpGet]
         public async Task<IActionResult> History()
         {
