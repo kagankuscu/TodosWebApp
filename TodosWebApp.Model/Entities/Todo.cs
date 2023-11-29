@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TodosWebApp.DataAccess.Entities
+namespace TodosWebApp.Model.Entities
 {
     public class Todo
     {

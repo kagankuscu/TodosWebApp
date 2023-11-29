@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodosWebApp.DataAccess.Entities;
+using TodosWebApp.Model.Entities;
 
 namespace TodosWebApp.BusinessLogic.Shared.Abstract
 {

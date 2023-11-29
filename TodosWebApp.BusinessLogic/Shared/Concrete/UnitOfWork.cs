@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.DataAccess.Data;
-using TodosWebApp.DataAccess.Entities;
+using TodosWebApp.Model.Entities;
 
 namespace TodosWebApp.BusinessLogic.Shared.Concrete
 {

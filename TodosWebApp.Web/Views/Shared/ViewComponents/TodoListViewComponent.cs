@@ -6,7 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.BusinessLogic.Shared.Concrete;
-using TodosWebApp.DataAccess.Entities;
+using TodosWebApp.Model.Entities;
 using TodosWebApp.Web.ViewModels;
 
 namespace TodosWebApp.Web.Views.Shared.ViewComponents
