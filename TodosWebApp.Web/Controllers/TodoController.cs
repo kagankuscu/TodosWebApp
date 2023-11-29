@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TodosWebApp.BusinessLogic;
+using TodosWebApp.BusinessLogic.Shared.Abstract;
+using TodosWebApp.BusinessLogic.Shared.Concrete;
 using TodosWebApp.DataAccess.Entities;
 using TodosWebApp.Web.ViewModels;
 
@@ -13,12 +15,12 @@ namespace TodosWebApp.Web.Controllers
     [Route("[controller]/[action]")]
     public class TodoController : Controller
     {
-        private readonly ITodoService _todoService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public TodoController(ITodoService todoService, IMapper mapper)
+        public TodoController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _todoService = todoService;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -27,7 +29,7 @@ namespace TodosWebApp.Web.Controllers
         [Route("/todo/index")]
         public async Task<IActionResult> Index()
         {
-            List<Todo> todos = await _todoService.GetAllAsync();
+            List<Todo> todos = _unitOfWork.Todos.GetAll().ToList();
             todos = todos.OrderByDescending(x=>x.CreatedDate).ToList();
             List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View();
@@ -37,17 +39,18 @@ namespace TodosWebApp.Web.Controllers
             // data for datatable library
             return Json(new 
             {
-                data = await _todoService.GetTodayTaskAsync()
+                data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today).ToList()
             });
         }
 
         [HttpPost("{id}")]
         public async Task<IActionResult> RemoveAJAX(int id)
         {
-            Todo todo = await _todoService.GetById(id);
+            Todo todo = _unitOfWork.Todos.GetById(id);
             if(todo != null)
             {
-                await _todoService.RemoveAsync(id);
+                _unitOfWork.Todos.Remove(todo);
+                _unitOfWork.Save();
                 return Json(new { Success = true, Message = $"The Task was removed successfuly. {todo.Id}" });
             }
 
@@ -57,7 +60,7 @@ namespace TodosWebApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> History()
         {
-            List<Todo> todos = await _todoService.GetAllAsync();
+            List<Todo> todos = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1)).ToList();
             todos = todos.OrderByDescending(x=>x.CreatedDate).ToList();
             List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View(todosVM);
@@ -77,28 +80,31 @@ namespace TodosWebApp.Web.Controllers
             {
                 todoViewModel.DueDate = DateTime.Now;
             }
-            await _todoService.SaveAsync(_mapper.Map<Todo>(todoViewModel));
+            _unitOfWork.Todos.Add(_mapper.Map<Todo>(todoViewModel));
+            _unitOfWork.Save();
             return RedirectToAction("index");
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Remove(int id)
         {
-            await _todoService.RemoveAsync(id);
+            _unitOfWork.Todos.Remove(_unitOfWork.Todos.GetById(id));
+            _unitOfWork.Save();
             return RedirectToAction("index");
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Update(int id)
         {
-            Todo todo = await _todoService.GetById(id);
+            Todo todo = _unitOfWork.Todos.GetById(id);
             return View(_mapper.Map<TodoViewModel>(todo));
         }
 
         [HttpPost("{id}")]
         public async Task<IActionResult> Update(TodoViewModel updateTodo)
         {
-            await _todoService.UpdateAsync(_mapper.Map<Todo>(updateTodo));
+            _unitOfWork.Todos.Update(_mapper.Map<Todo>(updateTodo));
+            _unitOfWork.Save();
 
             return RedirectToAction("index");
         }
@@ -106,7 +112,8 @@ namespace TodosWebApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateIsDone(TodoViewModel updateTodoVM)
         {
-            await _todoService.UpdateAsync(_mapper.Map<Todo>(updateTodoVM));
+            _unitOfWork.Todos.Update(_mapper.Map<Todo>(updateTodoVM));
+            _unitOfWork.Save();
             return Json(new { UptadedTodo = updateTodoVM });
         }
     }
