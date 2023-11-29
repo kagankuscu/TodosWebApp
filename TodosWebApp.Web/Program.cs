@@ -1,15 +1,15 @@
 using System.Reflection;
 using TodosWebApp.BusinessLogic;
+using TodosWebApp.BusinessLogic.Shared.Abstract;
+using TodosWebApp.BusinessLogic.Shared.Concrete;
 using TodosWebApp.DataAccess.Data;
-using TodosWebApp.DataAccess.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>();
-builder.Services.AddScoped<ITodoRepository, TodoRepository>();
-builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 var app = builder.Build();
 
