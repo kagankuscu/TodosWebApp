@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodosWebApp.BusinessLogic;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
@@ -12,6 +13,7 @@ using TodosWebApp.Web.ViewModels;
 
 namespace TodosWebApp.Web.Controllers
 {
+    [Authorize]
     [Route("[controller]/[action]")]
     public class TodoController : Controller
     {
