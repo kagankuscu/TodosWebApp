@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace TodosWebApp.Model.Entities
 {
-    public class Todo
+    public class Todo : BaseModel
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsDone { get; set; }
+        public User User { get; set; } = null!;
     }
 }
