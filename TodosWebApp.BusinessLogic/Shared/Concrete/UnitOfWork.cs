@@ -13,6 +13,8 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
         private readonly AppDbContext _context;
         public IRepository<Todo> Todos { get; private set; }
 
+        public IRepository<User> Users { get; private set; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
