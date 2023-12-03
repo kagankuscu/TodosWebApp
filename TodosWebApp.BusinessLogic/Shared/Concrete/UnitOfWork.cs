@@ -19,6 +19,7 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
         {
             _context = context;
             Todos = new Repository<Todo>(_context);
+            Users = new Repository<User>(_context);
         }
 
         public void Save()
