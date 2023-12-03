@@ -13,6 +13,7 @@ namespace TodosWebApp.Web.Mapping
         public MappingViewModel()
         {
             CreateMap<Todo, TodoViewModel>().ReverseMap();
+            CreateMap<User, UserViewModel>().ReverseMap();
         }
     }
 }
