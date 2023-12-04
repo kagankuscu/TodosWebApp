@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -38,10 +39,11 @@ namespace TodosWebApp.Web.Controllers
         }
         public async Task<IActionResult> GetTodayTask()
         {
+            int? userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             // data for datatable library
             return Json(new 
             {
-                data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today).ToList()
+                data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId).ToList()
             });
         }
 
@@ -62,7 +64,8 @@ namespace TodosWebApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> History()
         {
-            List<Todo> todos = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1)).ToList();
+            int? userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<Todo> todos = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1) && todo.User.Id == userId).ToList();
             todos = todos.OrderByDescending(x=>x.CreatedDate).ToList();
             List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View(todosVM);
@@ -77,12 +80,17 @@ namespace TodosWebApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(TodoViewModel todoViewModel)
         {
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             todoViewModel.CreatedDate = DateTime.Now;
             if (todoViewModel.DueDate.Year == 1)
             {
                 todoViewModel.DueDate = DateTime.Now;
             }
-            _unitOfWork.Todos.Add(_mapper.Map<Todo>(todoViewModel));
+
+            Todo todo = _mapper.Map<Todo>(todoViewModel);
+            todo.User = _unitOfWork.Users.GetFirstOrDefault(u => u.Id == userId);
+
+            _unitOfWork.Todos.Add(todo);
             _unitOfWork.Save();
             return RedirectToAction("index");
         }

@@ -8,6 +8,7 @@ using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.BusinessLogic.Shared.Concrete;
 using TodosWebApp.Model.Entities;
 using TodosWebApp.Web.ViewModels;
+using System.Security.Claims;
 
 namespace TodosWebApp.Web.Views.Shared.ViewComponents
 {
@@ -24,13 +25,15 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(int type = 1)
         {
+            int? userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+
             if (type == 2)
             {
-                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1))));
+                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1) && todo.User.Id == userId)));
             }
             else
             {
-                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date > DateTime.Today)));
+                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date > DateTime.Today && todo.User.Id == userId)));
             }
         }
     }
