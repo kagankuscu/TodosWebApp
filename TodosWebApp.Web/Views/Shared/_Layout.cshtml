@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+@{
+    string? name = User.FindFirstValue(ClaimTypes.GivenName);
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -33,6 +37,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="todo" asp-action="history">History</a>
                         </li>
                     </ul>
+                    <span class="nav-item mx-5 my-2">
+                           <h4><span class="me-2">Welcome,</span> <b>@name?.Substring(0,1).ToUpper()@name?.Substring(1)</b></h4>
+                    </span>
+                    <span class="nav-item me-3">
+                        <a href="/User/Logout" class="btn btn-danger btn-sm" style="color: white;">Log out</a>
+                    </span>
                 </div>
             </div>
         </nav>

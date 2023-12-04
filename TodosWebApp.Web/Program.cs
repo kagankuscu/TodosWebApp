@@ -1,5 +1,5 @@
 using System.Reflection;
-using TodosWebApp.BusinessLogic;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.BusinessLogic.Shared.Concrete;
 using TodosWebApp.DataAccess.Data;
@@ -11,6 +11,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        // options.Cookie.Name = "User.Cookie";
+        options.LoginPath = "/User/Login";
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +32,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // app.MapControllerRoute(

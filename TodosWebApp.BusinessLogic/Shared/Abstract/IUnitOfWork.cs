@@ -9,6 +9,7 @@ namespace TodosWebApp.BusinessLogic.Shared.Abstract
     public interface IUnitOfWork
     {
         IRepository<Todo> Todos { get;}
+        IRepository<User> Users { get;}
 
         void Save();
     }
