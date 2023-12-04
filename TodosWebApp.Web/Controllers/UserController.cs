@@ -38,7 +38,8 @@ public class UserController: Controller
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Username),
-            new(ClaimTypes.GivenName, user.FirstName ?? "")
+            new(ClaimTypes.GivenName, user.FirstName ?? ""),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
         };
 
         if(user.IsAdmin)
@@ -51,8 +52,12 @@ public class UserController: Controller
         }
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
-        var props = new AuthenticationProperties();
-        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props).Wait();
+        var props = new AuthenticationProperties() 
+        {
+            IsPersistent = userViewModel.IsRememberMe,
+        };
+        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
         return RedirectToAction("Index", "Todo");
     }
 

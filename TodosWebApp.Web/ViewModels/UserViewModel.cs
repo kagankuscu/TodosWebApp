@@ -10,4 +10,5 @@ public class UserViewModel : BaseModel
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? ConfirmPassword { get; set; }
+    public bool IsRememberMe { get; set; }
 }
