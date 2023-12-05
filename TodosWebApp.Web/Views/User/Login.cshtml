@@ -14,14 +14,14 @@
                             Up</a>
                         <hr class="my-4">
                     </h2>
-                    <form asp-controller="User" asp-action="Login" method="POST">
+                    <form id="loginForm" asp-controller="User" asp-action="Login" method="POST" data-parsley-validate>
                         <div class="form-group mb-3">
                             <label for="Username" class="form-label">Username</label>
-                            <input type="text" class="form-control" asp-for="Username" placeholder="Enter username">
+                            <input type="text" class="form-control mb-2" asp-for="Username" placeholder="Enter username" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="Password" class="form-label">Password</label>
-                            <input type="password" class="form-control" asp-for="Password" placeholder="Password">
+                            <input type="password" class="form-control mb-2" asp-for="Password" data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" asp-for="IsRememberMe">
