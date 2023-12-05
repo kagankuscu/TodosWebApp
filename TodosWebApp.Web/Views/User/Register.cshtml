@@ -18,27 +18,27 @@
           <form id="form" asp-controller="User" asp-action="Register" method="POST" data-parsley-validate>
             <div class="form-group mb-3">
               <label for="FirtName" class="form-label">First Name</label>
-              <input type="text" class="form-control" placeholder="Enter First Name" asp-for="FirstName" required>
+              <input type="text" class="form-control mb-2" placeholder="Enter First Name" asp-for="FirstName" required>
             </div>
             <div class="form-group mb-3">
               <label for="LastName" class="form-label">Last Name</label>
-              <input type="text" class="form-control" placeholder="Enter Last Name" asp-for="LastName" required>
+              <input type="text" class="form-control mb-2" placeholder="Enter Last Name" asp-for="LastName" required>
             </div>
             <div class="form-group mb-3">
               <label for="Username" class="form-label">Username</label>
-              <input type="text" class="form-control" placeholder="Enter Username" asp-for="Username" required>
+              <input type="text" class="form-control mb-2" placeholder="Enter Username" asp-for="Username" required>
             </div>
             <div class="form-group mb-3">
               <label for="Email" class="form-label">Email</label>
-              <input type="email" class="form-control" placeholder="Enter Email" asp-for="Email" required>
+              <input type="email" class="form-control mb-2" placeholder="Enter Email" asp-for="Email" required>
             </div>
             <div class="form-group mb-3">
               <label for="Password" class="form-label">Password </label>
-              <input type="password" class="form-control" placeholder="Enter Password" asp-for="Password" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
+              <input type="password" class="form-control mb-2" placeholder="Enter Password" asp-for="Password" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
             </div>
             <div class="form-group mb-3">
               <label for="ConfirmPassword" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" placeholder="Enter Confirm Password" asp-for="ConfirmPassword" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
+              <input type="password" class="form-control mb-2" placeholder="Enter Confirm Password" asp-for="ConfirmPassword" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
             </div>
             <div class="col">
               <button type="submit" class="btn btn-primary btn-lg w-100">Register</button>
@@ -61,7 +61,8 @@
     $("#ConfirmPassword").parsley().on("field:validated", () => {
       var ok = $("#Password").val() == $("#ConfirmPassword").val();
       $("#ConfirmPassword").toggleClass("parsley-error", !ok);
-
+      $("ul[id='parsley-id-15']").addClass("filled");
+      
       if($("ul[id='parsley-id-15']").length == 0) {
         $("[data-parsley-id='15']").parent().append("<ul id='parsley-id-15' class='parsley-errors-list filled' aria-hidden='false'></ul>");
       }
