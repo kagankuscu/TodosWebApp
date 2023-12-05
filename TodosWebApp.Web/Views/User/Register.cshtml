@@ -3,47 +3,75 @@
 }
 
 @model UserViewModel
-
-<form asp-controller="User" asp-action="Register" method="POST">
-    <div class="container">
-        <div class="row">
+<div class="d-flex container align-items-center justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="row">
+      <div class="card">
+        <div class="card-body my-3">
+          <a href="/User/Login" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+            <h5>Back</h5>
+          </a>
+          <h2 class="card-title mb-4 text-center">
+            Register
+            <hr class="my-4">
+          </h2>
+          <form id="form" asp-controller="User" asp-action="Register" method="POST" data-parsley-validate>
+            <div class="form-group mb-3">
+              <label for="FirtName" class="form-label">First Name</label>
+              <input type="text" class="form-control" placeholder="Enter First Name" asp-for="FirstName" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="LastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" placeholder="Enter Last Name" asp-for="LastName" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="Username" class="form-label">Username</label>
+              <input type="text" class="form-control" placeholder="Enter Username" asp-for="Username" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="Email" class="form-label">Email</label>
+              <input type="email" class="form-control" placeholder="Enter Email" asp-for="Email" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="Password" class="form-label">Password </label>
+              <input type="password" class="form-control" placeholder="Enter Password" asp-for="Password" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
+            </div>
+            <div class="form-group mb-3">
+              <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" placeholder="Enter Confirm Password" asp-for="ConfirmPassword" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
+            </div>
             <div class="col">
-                <h3>Register</h3>
+              <button type="submit" class="btn btn-primary btn-lg w-100">Register</button>
             </div>
+          </form>
         </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="Firstname">Firsname</label>
-                    <input type="text" class="form-control" asp-for="FirstName" placeholder="Enter Firstname">
-                </div>
-                <div class="form-group">
-                    <label for="Lastname">Lastname</label>
-                    <input type="text" class="form-control" asp-for="LastName" placeholder="Enter Lastname">
-                </div>
-                <div class="form-group">
-                    <label for="Username">Username</label>
-                    <input type="text" class="form-control" asp-for="Username" placeholder="Enter Username">
-                </div>
-                <div class="form-group">
-                    <label for="Email">Email address</label>
-                    <input type="email" class="form-control" asp-for="Email" aria-describedby="emailHelp"
-                        placeholder="Enter Email">
-                </div>
-                <div class="form-group">
-                    <label for="Password">Password</label>
-                    <input type="password" class="form-control" asp-for="Password" placeholder="Password">
-                </div>
-                <div class="form-group">
-                    <label for="ConfirmPassword">Confirm Password</label>
-                    <input type="password" class="form-control" asp-for="ConfirmPassword" placeholder="Confirm Password">
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
+      </div>
     </div>
-</form>
+  </div>
+</div>
+
+@section Scripts {
+<script>
+  $(document).ready(() => { 
+
+    $("#form").parsley().on("form:submit", () => {
+      return $("#Password").val() == $("#ConfirmPassword").val();
+    });
+
+    $("#ConfirmPassword").parsley().on("field:validated", () => {
+      var ok = $("#Password").val() == $("#ConfirmPassword").val();
+      $("#ConfirmPassword").toggleClass("parsley-error", !ok);
+
+      if($("ul[id='parsley-id-15']").length == 0) {
+        $("[data-parsley-id='15']").parent().append("<ul id='parsley-id-15' class='parsley-errors-list filled' aria-hidden='false'></ul>");
+      }
+
+      if($("#Password").val() != $("#ConfirmPassword").val() && $("ul[id='parsley-id-15'] li").length == 0) {
+        $("ul[id='parsley-id-15']").append("<li class='parsley-required'>Passwords do not match</li>");
+      } else if ($("#Password").val() == $("#ConfirmPassword").val() && $("ul[id='parsley-id-15'] li").length == 1) {
+        $("ul[id='parsley-id-15']").remove();
+      }
+    });
+  });
+</script>
+}
