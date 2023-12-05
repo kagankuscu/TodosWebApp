@@ -50,3 +50,28 @@
   </div>
 </div>
 
+@section Scripts {
+<script>
+  $(document).ready(() => { 
+
+    $("#form").parsley().on("form:submit", () => {
+      return $("#Password").val() == $("#ConfirmPassword").val();
+    });
+
+    $("#ConfirmPassword").parsley().on("field:validated", () => {
+      var ok = $("#Password").val() == $("#ConfirmPassword").val();
+      $("#ConfirmPassword").toggleClass("parsley-error", !ok);
+
+      if($("ul[id='parsley-id-15']").length == 0) {
+        $("[data-parsley-id='15']").parent().append("<ul id='parsley-id-15' class='parsley-errors-list filled' aria-hidden='false'></ul>");
+      }
+
+      if($("#Password").val() != $("#ConfirmPassword").val() && $("ul[id='parsley-id-15'] li").length == 0) {
+        $("ul[id='parsley-id-15']").append("<li class='parsley-required'>Passwords do not match</li>");
+      } else if ($("#Password").val() == $("#ConfirmPassword").val() && $("ul[id='parsley-id-15'] li").length == 1) {
+        $("ul[id='parsley-id-15']").remove();
+      }
+    });
+  });
+</script>
+}
