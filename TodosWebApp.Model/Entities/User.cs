@@ -1,6 +1,6 @@
 ﻿namespace TodosWebApp.Model.Entities;
 
-public class User : BaseModel
+public class User: BaseModel
 {
     public string Username { get; set; } = null!;
     public string Password { get; set; } = null!;

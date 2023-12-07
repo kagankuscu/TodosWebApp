@@ -8,9 +8,10 @@ namespace TodosWebApp.Model.Entities
     public class Todo : BaseModel
     {
         public string? Name { get; set; }
-        public DateTime CreatedDate { get; set; }
         public DateTime DueDate { get; set; }
-        public bool IsDone { get; set; }
+        public bool IsDone { get; set; } = false;
         public User User { get; set; } = null!;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime ModifiedDate { get; set; } = DateTime.Now;
     }
 }
