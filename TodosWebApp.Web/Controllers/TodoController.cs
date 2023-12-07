@@ -81,7 +81,6 @@ namespace TodosWebApp.Web.Controllers
         public async Task<IActionResult> Add(TodoViewModel todoViewModel)
         {
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            todoViewModel.CreatedDate = DateTime.Now;
             if (todoViewModel.DueDate.Year == 1)
             {
                 todoViewModel.DueDate = DateTime.Now;
