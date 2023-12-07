@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.DataAccess.Data;
+using TodosWebApp.Model;
 
 namespace TodosWebApp.BusinessLogic.Shared.Concrete
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseModel
     {
         private readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
@@ -32,7 +33,7 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
 
         public IQueryable<T> GetAll()
         {
-            return _dbSet.Select(t => t);
+            return _dbSet.Where(t => t.IsDeleted == false).Select(t => t);
         }
 
         public IQueryable<T> GetAll(Expression<Func<T, bool>> filter)
@@ -52,7 +53,8 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
 
         public void Remove(T item)
         {
-            _dbSet.Remove(item);
+            item.IsDeleted = true;
+            _dbSet.Update(item);
         }
 
         public void RemoveRange(IEnumerable<T> items)
