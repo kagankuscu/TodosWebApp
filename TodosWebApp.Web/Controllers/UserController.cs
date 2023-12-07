@@ -85,4 +85,19 @@ public class UserController: Controller
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
         return RedirectToAction("Login");
     }
+
+    [HttpPost("{user}")]
+    public IActionResult CheckUser(string user, UserViewModel userViewModel)
+    {
+        if(user == "username")
+        {
+            bool isUsername = _unitOfWork.Users.GetFirstOrDefault(u => u.Username == userViewModel.Username) == null;
+            return Json(new { Username = userViewModel.Username, IsUsername = !isUsername });
+        } else if(user == "email")
+        {
+            bool isEmail = _unitOfWork.Users.GetFirstOrDefault(u => u.Email == userViewModel.Email) == null;
+            return Json(new { Email = userViewModel.Email, IsEmail = !isEmail });
+        } 
+        return Json(new { });
+    }
 }
