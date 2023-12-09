@@ -33,7 +33,7 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
 
         public IQueryable<T> GetAll()
         {
-            return _dbSet.Where(t => t.IsDeleted == false).Select(t => t);
+            return _dbSet.Where(t => t.IsDeleted == false);
         }
 
         public IQueryable<T> GetAll(Expression<Func<T, bool>> filter)
