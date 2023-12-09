@@ -40,15 +40,17 @@ namespace TodosWebApp.Web.Controllers
 
         public IActionResult GetAllUsers()
         {
-            List<User> users = _unitOfWork.Users.GetAll().Include(u => u.Todos).ToList();
-            List<UserViewModel> usersVM = _mapper.Map<List<UserViewModel>>(users);
-            users.ForEach(u =>
-            {
-                usersVM.Find(x => x.Id == u.Id)!.TotalTask = u.Todos.Where(t => t.IsDeleted == false).Count();
-                usersVM.Find(x => x.Id == u.Id)!.CompletedTask = u.Todos.Where(t => t.IsDone && t.IsDeleted == false).Count();
-                usersVM.Find(x => x.Id == u.Id)!.IsActive = true;
-            });
-            return Json(new { data = usersVM});
+            List<UserViewModel> users = _unitOfWork.Users.GetAll().Include(u => u.Todos).Select(u => new UserViewModel{
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                TotalTask = u.Todos.Count(),
+                CompletedTask = u.Todos.Count(t => t.IsDone),
+                IsActive = true
+            }).ToList();
+            return Json(users);
         }
     }
 }
