@@ -101,7 +101,10 @@
 
         function getAllUsers() {
             DataTable = $('#userTable').DataTable({
-                ajax: "/Admin/GetAllUsers",
+                ajax: {
+                        url: "/Admin/GetAllUsers",
+                        dataSrc: ""
+                    },
                 columns: [
                     { data: "id" },
                     { data: "username" },
