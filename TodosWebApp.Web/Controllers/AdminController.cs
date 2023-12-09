@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
+using TodosWebApp.DTOLayer;
 using TodosWebApp.Model.Entities;
 
 namespace TodosWebApp.Web.Controllers
@@ -40,7 +41,7 @@ namespace TodosWebApp.Web.Controllers
 
         public IActionResult GetAllUsers()
         {
-            List<UserViewModel> users = _unitOfWork.Users.GetAll().Include(u => u.Todos).Select(u => new UserViewModel{
+            List<UserListDTO> users = _unitOfWork.Users.GetAll().Include(u => u.Todos).Select(u => new UserListDTO {
                 Id = u.Id,
                 Username = u.Username,
                 Email = u.Email,
