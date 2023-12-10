@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TodosWebApp.BusinessLogic\TodosWebApp.BusinessLogic.csproj" />
+    <ProjectReference Include="..\TodosWebApp.DTOLayer\TodosWebApp.DTOLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

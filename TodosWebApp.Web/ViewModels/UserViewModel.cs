@@ -11,4 +11,15 @@ public class UserViewModel : BaseModel
     public string? LastName { get; set; }
     public string? ConfirmPassword { get; set; }
     public bool IsRememberMe { get; set; }
+    public int TotalTask { get; set; }
+    public int CompletedTask { get; set; }
+    public bool IsAdmin { get; set; }
+    public bool IsActive { get; set; }
+    public string Fullname 
+    {
+        get
+        {
+            return $"{FirstName} {LastName}";
+        }
+    } 
 }
