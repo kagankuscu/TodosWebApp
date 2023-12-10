@@ -1,5 +1,5 @@
 @{
-    Layout = "_UserLayout";
+  Layout = "_UserLayout";
 }
 
 @model UserViewModel
@@ -41,7 +41,7 @@
               <input type="password" class="form-control mb-2" placeholder="Enter Confirm Password" asp-for="ConfirmPassword" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-primary btn-lg w-100">Register</button>
+              <button id="btnSubmit" type="submit" class="btn btn-primary btn-lg w-100">Register</button>
             </div>
           </form>
         </div>
@@ -51,71 +51,70 @@
 </div>
 
 @section Scripts {
-<script>
-  $(document).ready(() => { 
-    var isUsername = false;
-    var isEmail = false;
+  <script>
+    $(document).ready(() => {
 
-    $("#form").parsley().on("form:submit", () => {
-      return $("#Password").val() == $("#ConfirmPassword").val() && !isUsername && !isEmail;
-    });
+      $("#btnSubmit").click(function () {
+        event.preventDefault();
+        if ($("#form").parsley().isValid() === false) {
+          $('#form').parsley().validate();
+          $('#form').addClass('was-validated');
+        }
 
-    $("#ConfirmPassword").parsley().on("field:validated", () => {
-      var ok = $("#Password").val() == $("#ConfirmPassword").val();
-      $("#ConfirmPassword").toggleClass("parsley-error", !ok);
-      $("ul[id='parsley-id-15']").addClass("filled");
-
-      if($("ul[id='parsley-id-15']").length == 0) {
-        $("[data-parsley-id='15']").parent().append("<ul id='parsley-id-15' class='parsley-errors-list filled' aria-hidden='false'></ul>");
-      }
-
-      if($("#Password").val() != $("#ConfirmPassword").val() && $("ul[id='parsley-id-15'] li").length == 0) {
-        $("ul[id='parsley-id-15']").append("<li class='parsley-required'>Passwords do not match</li>");
-      } else if ($("#Password").val() == $("#ConfirmPassword").val() && $("ul[id='parsley-id-15'] li").length == 1) {
-        $("ul[id='parsley-id-15']").remove();
-      }
-    });
-
-    $("#Username").parsley().on("field:validated", (e) => {
-      var xhr = checkUser("username");
-      xhr.then((data)=>{
-        $("#Username").toggleClass("parsley-error", data["isUsername"]);
-
-        if($("ul[id='parsley-id-9'] li.parsley-error").length == 0 && $("#Username").val() != "" && data["isUsername"]) {
-          $("#Username").parsley().addError("error", {message: "Username already exists"});
-          isUsername = true;
-        } else if (data["isUsername"] == false) {
-          $("#Username").parsley().removeError("error");
-          isUsername = false;
+        var password = $("#Password").val()
+        var confirmPassword = $("#ConfirmPassword").val()
+        // Check Password and ComfirmPassword field is match.
+        if (password !== confirmPassword) {
+          var confirmPasswordId = $("#ConfirmPassword").attr("data-parsley-id");
+          $("#ConfirmPassword").removeClass("parsley-success").addClass("parsley-error");
+          $(`ul[id=parsley-id-${confirmPasswordId}]`).addClass("filled");
+          if ($(`ul[id=parsley-id-${confirmPasswordId}] li`).length === 0) {
+            $("#ConfirmPassword").parsley().addError("confirm-error", { message: "Confirm Password is not match.", updateClass: true });
+          }
+        } else {
+          $(".parsley-confirm-error").remove();
+        }
+        console.log();
+        if ($(".parsley-error").length > 0 === false) {
+          var newUser = {
+            firstname: $("#FirstName").val(),
+            lastname: $("#LastName").val(),
+            username: $("#Username").val(),
+            email: $("#Email").val(),
+            password: $("#Password").val(),
+            confirmPassword: $("#ConfirmPassword").val(),
+          }
+          console.log(newUser);
+          $.ajax({
+            type: "POST",
+            url: "/User/Register",
+            data: newUser,
+            success: function (data) {
+              if (data) {
+                if(data["status"] == "error") {
+                  toastr.error("Registiration was unsuccessfull. " + data["message"]);
+                } else {
+                  window.location.href = "/User/Login";
+                }
+              }
+            },
+            error: function (error) {
+              toastr.error("Something went wrong.");
+            }
+          });
         }
       });
-    });
 
-    $("#Email").parsley().on("field:validated", (e) => {
-      var xhr = checkUser("email");
-      xhr.then((data)=>{
-        $("#Email").toggleClass("parsley-error", data["isEmail"]);
-
-        if($("ul[id='parsley-id-11'] li.parsley-error").length == 0 && $("#Email").val() != "" && data["isEmail"]) {
-          $("#Email").parsley().addError("error", {message: "Email already exists"});
-          isEmail = true;
-        } else if (data["isEmail"] == false) {
-          $("#Email").parsley().removeError("error");
-          isEmail = false;
-        }
-      });
-    });
-    
-  function checkUser(user) { 
+      function checkUser(user) {
         return $.ajax({
-        type: "POST",
-        url: `/User/CheckUser/${user}`,
-        data: {
-          username: $("#Username").val(),
-          email: $("#Email").val(),
-        },
-      });
-    }
-  });
-</script>
+          type: "POST",
+          url: `/User/CheckUser/${user}`,
+          data: {
+            username: $("#Username").val(),
+            email: $("#Email").val(),
+          },
+        });
+      }
+    });
+  </script>
 }
