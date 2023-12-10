@@ -69,11 +69,10 @@ public class UserController: Controller
     [HttpPost]
     public IActionResult Register(UserViewModel userViewModel)
     {
-        var user = _unitOfWork.Users.GetFirstOrDefault(u => u.Username == userViewModel.Username);
+        var user = _unitOfWork.Users.GetFirstOrDefault(u => u.Username == userViewModel.Username || u.Email == userViewModel.Email);
         if (user != null)
         {
-            ViewBag.Message = "Username is already taken";
-            return View();
+            return Json(new { status= "error", message= "Username or Email already taken." });
         }
         _unitOfWork.Users.Add(_mapper.Map<User>(userViewModel));
         _unitOfWork.Save();
