@@ -13,7 +13,7 @@ namespace TodosWebApp.Web.ViewModels
         // public DateTime CreatedDate { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsDone { get; set; }
-
+        public int PriorityId { get; set; }
         public string GetDueDate() => DueDate.ToShortDateString();
     }
 }
