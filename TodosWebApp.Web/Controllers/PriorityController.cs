@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.Model;
@@ -24,7 +25,7 @@ namespace TodosWebApp.Web.Controllers
 
         public IActionResult GetAllPriorities()
         {
-            List<Priority> priorities = _unitOfWork.Priorities.GetAll().ToList();
+            List<Priority> priorities = _unitOfWork.Priorities.GetAll().Include(p => p.Type).ToList();
             return Json(priorities);
         }
     }

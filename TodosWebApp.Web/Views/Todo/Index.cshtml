@@ -203,7 +203,7 @@
                 url: "/Priority/GetAllPriorities",
                 success: function(res) {
                     for(var item of res) {
-                        $("#PriorityId").append(new Option(item.name, item.id));
+                        $("#PriorityId").append(new Option(item.type.name, item.typeId));
                     }
                     $("#PriorityId").select2({
                         placeholder: "Select Priority",

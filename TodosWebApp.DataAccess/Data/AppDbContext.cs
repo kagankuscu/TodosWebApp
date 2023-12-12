@@ -20,5 +20,6 @@ namespace TodosWebApp.DataAccess.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Priority> Priorities { get; set; }
+        public DbSet<PriorityType> PriorityTypes { get; set; }
     }
 }

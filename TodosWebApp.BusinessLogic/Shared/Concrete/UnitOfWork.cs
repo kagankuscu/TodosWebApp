@@ -16,6 +16,7 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
 
         public IRepository<User> Users { get; private set; }
         public IRepository<Priority> Priorities { get; private set; }
+        public IRepository<PriorityType> PriorityTypes { get; private set; }
 
         public UnitOfWork(AppDbContext context)
         {
@@ -23,6 +24,7 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
             Todos = new Repository<Todo>(_context);
             Users = new Repository<User>(_context);
             Priorities = new Repository<Priority>(_context);
+            PriorityTypes = new Repository<PriorityType>(_context);
         }
 
         public void Save()

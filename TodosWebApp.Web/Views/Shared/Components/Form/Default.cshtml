@@ -11,7 +11,7 @@
                             <select class="form-select" aria-label="Default select example" asp-for="PriorityId" required>
                                 @foreach(var priority in ViewBag.priorities)
                                 {
-                                    <option value=@priority.Id>@priority.Name</option>
+                                    <option value=@priority.Id>@priority.Type.Name</option>
                                 }
                             </select>
                         </div>

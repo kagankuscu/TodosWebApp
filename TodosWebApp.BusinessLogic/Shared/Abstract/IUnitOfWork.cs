@@ -12,6 +12,7 @@ namespace TodosWebApp.BusinessLogic.Shared.Abstract
         IRepository<Todo> Todos { get;}
         IRepository<User> Users { get;}
         IRepository<Priority> Priorities { get;}
+        IRepository<PriorityType> PriorityTypes { get; }
 
         void Save();
     }

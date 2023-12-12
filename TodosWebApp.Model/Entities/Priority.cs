@@ -8,7 +8,8 @@ namespace TodosWebApp.Model
 {
     public class Priority : BaseModel
     {
-        public string Name { get; set; }
+        public int TypeId { get; set; }
+        public virtual PriorityType Type { get; set; }
         public virtual ICollection<Todo> Todos { get; set; }
     }
 }
