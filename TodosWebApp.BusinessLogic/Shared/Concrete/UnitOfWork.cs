@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.DataAccess.Data;
+using TodosWebApp.Model;
 using TodosWebApp.Model.Entities;
 
 namespace TodosWebApp.BusinessLogic.Shared.Concrete
@@ -14,12 +15,14 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
         public IRepository<Todo> Todos { get; private set; }
 
         public IRepository<User> Users { get; private set; }
+        public IRepository<Priority> Priorities { get; private set; }
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             Todos = new Repository<Todo>(_context);
             Users = new Repository<User>(_context);
+            Priorities = new Repository<Priority>(_context);
         }
 
         public void Save()

@@ -13,5 +13,7 @@ namespace TodosWebApp.Model.Entities
         public User User { get; set; } = null!;
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public DateTime ModifiedDate { get; set; } = DateTime.Now;
+        public int PriorityId { get; set; }
+        public virtual Priority Priority { get; set; }
     }
 }

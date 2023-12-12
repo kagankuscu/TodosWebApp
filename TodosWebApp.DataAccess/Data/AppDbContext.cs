@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TodosWebApp.Model;
 using TodosWebApp.Model.Entities;
 
 namespace TodosWebApp.DataAccess.Data
@@ -18,5 +19,6 @@ namespace TodosWebApp.DataAccess.Data
         public DbSet<Todo> Todos { get; set; }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Priority> Priorities { get; set; }
     }
 }
