@@ -59,7 +59,7 @@
         if ($("#form").parsley().isValid() === false) {
           $('#form').parsley().validate();
           $('#form').addClass('was-validated');
-        }
+        } else {
 
         var password = $("#Password").val()
         var confirmPassword = $("#ConfirmPassword").val()
@@ -74,34 +74,32 @@
         } else {
           $(".parsley-confirm-error").remove();
         }
-        console.log();
-        if ($(".parsley-error").length > 0 === false) {
-          var newUser = {
-            firstname: $("#FirstName").val(),
-            lastname: $("#LastName").val(),
-            username: $("#Username").val(),
-            email: $("#Email").val(),
-            password: $("#Password").val(),
-            confirmPassword: $("#ConfirmPassword").val(),
-          }
-          console.log(newUser);
-          $.ajax({
-            type: "POST",
-            url: "/User/Register",
-            data: newUser,
-            success: function (data) {
-              if (data) {
-                if(data["status"] == "error") {
-                  toastr.error("Registiration was unsuccessfull. " + data["message"]);
-                } else {
-                  window.location.href = "/User/Login";
-                }
+        var newUser = {
+          firstname: $("#FirstName").val(),
+          lastname: $("#LastName").val(),
+          username: $("#Username").val(),
+          email: $("#Email").val(),
+          password: $("#Password").val(),
+          confirmPassword: $("#ConfirmPassword").val(),
+        }
+        $.ajax({
+          type: "POST",
+          url: "/User/Register",
+          data: newUser,
+          success: function (data) {
+            if (data) {
+              if(data["status"] == "error") {
+                toastr.error("Registiration was unsuccessfull. " + data["message"]);
+              } else {
+                window.location.href = "/User/Login";
               }
-            },
-            error: function (error) {
-              toastr.error("Something went wrong.");
             }
-          });
+          },
+          error: function (error) {
+            toastr.error(error.responseText
+            );
+          }
+        });
         }
       });
 
