@@ -8,7 +8,8 @@ function MyFunction(id)
         name: $("#name"+id).text(),
         isDone: $("#isDone"+id).is(":checked"),
         dueDate: $("#dueDate"+id).text(),
-        createdDate: $("#createdDate" + id).text()
+        createdDate: $("#createdDate" + id).text(),
+        priorityId: $("#priorityId-" + id).text(),
     }
 
     console.log(jsonData);

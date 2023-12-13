@@ -10,5 +10,5 @@ public class User: BaseModel
     public string? Token { get; set; }
     public bool IsAdmin { get; set; }
 
-    public ICollection<Todo> Todos { get; set; } 
+    public virtual ICollection<Todo> Todos { get; set; }  = new List<Todo>();
 }

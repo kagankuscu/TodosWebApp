@@ -7,6 +7,14 @@
                     <div class="d-flex flex-row align-items-center">
                         <input type="text" class="form-control form-control-lg" placeholder="Add new..." asp-for="@Model.Name">
                         <span class="text-danger" ></span>
+                        <div class="col-2 me-3">
+                            <select class="form-select" aria-label="Default select example" asp-for="PriorityId" required>
+                                @foreach(var priority in ViewBag.priorities)
+                                {
+                                    <option value=@priority.Id>@priority.Type.Name</option>
+                                }
+                            </select>
+                        </div>
                         <div>
                             <input type="submit" class="btn btn-primary" value="@ViewBag.title" />
                             <input type="hidden" asp-for="@Model.IsDone" />
