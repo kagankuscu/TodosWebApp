@@ -23,7 +23,11 @@
             <td>
                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
             <p id="name@(todo.Id)" class="lead fw-normal mb-0">@todo.Name</p>
+                    <span class="px-3"> | </span>
+                    <span class="px-3 py-2 badge bg-@todo.Priority.Name">@todo.Priority.Type.Name</span>
+                    <span id="priorityId-@todo.Id" hidden>@todo.PriorityId</span>
                 </li>
+                @* <span class="me-2 px-3 py-1 badge rounded-pill bg-primary">Software</span> *@
             </td>
             <td>
                 <li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
