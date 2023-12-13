@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TodosWebApp.Model;
 
 namespace TodosWebApp.Web.ViewModels
 {
@@ -14,6 +15,7 @@ namespace TodosWebApp.Web.ViewModels
         public DateTime DueDate { get; set; }
         public bool IsDone { get; set; }
         public int PriorityId { get; set; }
+        public Priority Priority { get; set; }
         public string GetDueDate() => DueDate.ToShortDateString();
     }
 }

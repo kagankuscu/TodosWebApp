@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TodosWebApp.BusinessLogic;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.BusinessLogic.Shared.Concrete;
@@ -43,7 +44,7 @@ namespace TodosWebApp.Web.Controllers
             // data for datatable library
             return Json(new 
             {
-                data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId).ToList()
+                data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId).Include(t => t.Priority).Include(t => t.Priority.Type).ToList()
             });
         }
 
