@@ -37,6 +37,12 @@
                                                 <input type="datetime-local" asp-for="@Model.DueDate" class="form-control form-control-lg">
                                                 @* <input type="hidden" asp-for="@Model.CreatedDate"> *@
                                             </div>
+                                            <div class="d-flex flex-row align-items-center col-5">
+                                                <div class="input-group me-3 d-flex">
+                                                    <select asp-for="Tags" name="TagsId[]" class="js-example-basic-multiple" multiple="multiple" required>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                 </div>
                             </div>
@@ -220,6 +226,24 @@
                         theme: "classic"
                     })
                 }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "/Tag/GetAllTags",
+                success: function(res) 
+                        {
+                            for(var item of res)
+                            {
+                                $("#Tags").append(new Option(item.name, item.id));
+                            }
+                            $("#Tags").select2(
+                                {
+                                    placeholder: "Select Tags",
+                                    theme: "classic",
+                                }
+                            )
+                        }
             })
         }
     </script>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TodosWebApp.Model;
+using TodosWebApp.Model.Entities;
 
 namespace TodosWebApp.Web.ViewModels
 {
@@ -16,6 +17,8 @@ namespace TodosWebApp.Web.ViewModels
         public bool IsDone { get; set; }
         public int PriorityId { get; set; }
         public Priority Priority { get; set; }
+        public List<Tag> Tags { get; set; }
+        public List<int> TagsId { get; set; }
         public string GetDueDate() => DueDate.ToShortDateString();
     }
 }
