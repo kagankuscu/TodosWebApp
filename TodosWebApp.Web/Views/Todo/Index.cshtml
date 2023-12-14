@@ -37,6 +37,12 @@
                                                 <input type="datetime-local" asp-for="@Model.DueDate" class="form-control form-control-lg">
                                                 @* <input type="hidden" asp-for="@Model.CreatedDate"> *@
                                             </div>
+                                            <div class="d-flex flex-row align-items-center col-5">
+                                                <div class="input-group me-3 d-flex">
+                                                    <select asp-for="Tags" name="TagsId[]" class="js-example-basic-multiple" multiple="multiple" required>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                 </div>
                             </div>
@@ -161,15 +167,18 @@
         }
 
         function nameHtml(data, row) {
-            console.log(row);
-            return `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+            var html = `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
                          <p id="name${row.id}" class="lead fw-normal mb-0">${data}</p><span class="px-3"> | </span>
                          <span class="px-3 py-2 badge bg-${row.priority.name}">${row.priority.type.name}</span>
                          <span id="priorityId-${row.id}" hidden>${row.priorityId}</span>
-                     </li>
-                     <li class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                        
-                    </li>`;
+                     </li> 
+                     <li id="tags-${row.id}" class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">`;
+            var list = '';
+            for(var tag of row.tags)
+            {
+                list+=`<span class="me-2 px-3 py-1 badge rounded-pill bg-${tag.types??"dark"}">${tag.name}</span>`
+            };
+            return html + list + `</li>`;
         }
         function isDoneHtml(data, row) {
             return `<li class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
@@ -217,6 +226,24 @@
                         theme: "classic"
                     })
                 }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "/Tag/GetAllTags",
+                success: function(res) 
+                        {
+                            for(var item of res)
+                            {
+                                $("#Tags").append(new Option(item.name, item.id));
+                            }
+                            $("#Tags").select2(
+                                {
+                                    placeholder: "Select Tags",
+                                    theme: "classic",
+                                }
+                            )
+                        }
             })
         }
     </script>

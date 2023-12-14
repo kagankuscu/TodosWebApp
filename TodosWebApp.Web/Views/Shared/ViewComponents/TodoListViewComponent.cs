@@ -30,11 +30,11 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
 
             if (type == 2)
             {
-                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1) && todo.User.Id == userId).Include(t => t.Priority).Include(t => t.Priority.Type)));
+                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1) && todo.User.Id == userId).Include(t => t.Priority).Include(t => t.Tags).Include(t => t.Priority.Type)));
             }
             else
             {
-                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date > DateTime.Today && todo.User.Id == userId).Include(t => t.Priority).Include(t => t.Priority.Type)));
+                return View(_mapper.Map<List<TodoViewModel>>(_unitOfWork.Todos.GetAll(todo => todo.DueDate.Date > DateTime.Today && todo.User.Id == userId).Include(t => t.Priority).Include(t => t.Priority.Type).Include(t => t.Tags)));
             }
         }
     }

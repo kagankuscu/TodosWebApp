@@ -14,5 +14,6 @@ namespace TodosWebApp.Model.Entities
         public DateTime ModifiedDate { get; set; } = DateTime.Now;
         public int PriorityId { get; set; }
         public virtual Priority Priority { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
     }
 }

@@ -13,6 +13,8 @@ namespace TodosWebApp.BusinessLogic.Shared.Abstract
         IRepository<User> Users { get;}
         IRepository<Priority> Priorities { get;}
         IRepository<PriorityType> PriorityTypes { get; }
+        IRepository<Tag> Tags { get; }
+        IRepository<TagTypes> TagTypes { get;}
 
         void Save();
     }
