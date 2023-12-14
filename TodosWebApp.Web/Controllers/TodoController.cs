@@ -93,6 +93,9 @@ namespace TodosWebApp.Web.Controllers
             Todo todo = _mapper.Map<Todo>(todoViewModel);
             todo.User = _unitOfWork.Users.GetFirstOrDefault(u => u.Id == userId);
 
+            foreach(int tagId in todoViewModel.TagsId)
+                todo.Tags.Add(_unitOfWork.Tags.GetById(tagId));
+
             _unitOfWork.Todos.Add(todo);
             _unitOfWork.Save();
             return RedirectToAction("index");
@@ -109,14 +112,25 @@ namespace TodosWebApp.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Update(int id)
         {
-            Todo todo = _unitOfWork.Todos.GetById(id);
+            Todo todo = _unitOfWork.Todos.GetAll(t => t.Id == id).Include(t=>t.Tags).FirstOrDefault()!;
             return View(_mapper.Map<TodoViewModel>(todo));
         }
 
         [HttpPost("{id}")]
         public async Task<IActionResult> Update(TodoViewModel updateTodo)
         {
-            _unitOfWork.Todos.Update(_mapper.Map<Todo>(updateTodo));
+            Todo real = _unitOfWork.Todos.GetAll(t => t.Id == updateTodo.Id).Include(t => t.Priority).Include(t => t.Tags).Include(t => t.User).First();
+            
+            real.Name = updateTodo.Name;
+            real.PriorityId = updateTodo.PriorityId;
+            real.DueDate = updateTodo.DueDate;
+
+            List<Tag> tags = new();
+            foreach(int tagId in updateTodo.TagsId)
+                tags.Add(_unitOfWork.Tags.GetById(tagId));
+
+            real.Tags = tags;
+            _unitOfWork.Todos.Update(real);
             _unitOfWork.Save();
 
             return RedirectToAction("index");
@@ -128,6 +142,11 @@ namespace TodosWebApp.Web.Controllers
             _unitOfWork.Todos.Update(_mapper.Map<Todo>(updateTodoVM));
             _unitOfWork.Save();
             return Json(new { UptadedTodo = updateTodoVM });
+        }
+        [HttpPost]
+        public IActionResult GetById(int id)
+        {
+            return Json(_unitOfWork.Todos.GetAll(t => t.Id == id).Include(t => t.Tags).First());
         }
     }
 }
