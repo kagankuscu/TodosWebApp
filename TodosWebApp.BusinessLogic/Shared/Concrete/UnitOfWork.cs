@@ -18,7 +18,6 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
         public IRepository<Priority> Priorities { get; private set; }
         public IRepository<PriorityType> PriorityTypes { get; private set; }
         public IRepository<Tag> Tags { get; private set; }
-        public IRepository<TagTypes> TagTypes { get; private set; }
 
         public UnitOfWork(AppDbContext context)
         {
@@ -28,7 +27,6 @@ namespace TodosWebApp.BusinessLogic.Shared.Concrete
             Priorities = new Repository<Priority>(_context);
             PriorityTypes = new Repository<PriorityType>(_context);
             Tags = new Repository<Tag>(_context);
-            TagTypes = new Repository<TagTypes>(_context);
         }
 
         public void Save()

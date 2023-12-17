@@ -22,6 +22,5 @@ namespace TodosWebApp.DataAccess.Data
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<PriorityType> PriorityTypes { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<TagTypes> TagTypes { get; set; }
     }
 }
