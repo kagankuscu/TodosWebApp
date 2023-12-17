@@ -106,6 +106,8 @@
 
         function updateIsDone(id)
         {
+            var tags = [];
+
             jsonData = {
                 id: id,
                 name: $("#name"+id).text(),
@@ -113,7 +115,10 @@
                 dueDate: $("#dueDate"+id).text(),
                 createdDate: $("#createdDate" + id).text(),
                 priorityId: $("#priorityId-" + id).text(),
+                tagsId: [1,2],
             }
+
+            console.log($("#Tags").text(),);
 
             $.ajax({
                 type: "POST",
@@ -168,15 +173,15 @@
 
         function nameHtml(data, row) {
             var html = `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                         <p id="name${row.id}" class="lead fw-normal mb-0">${data}</p><span class="px-3"> | </span>
-                         <span class="px-3 py-2 badge bg-${row.priority.name}">${row.priority.type.name}</span>
-                         <span id="priorityId-${row.id}" hidden>${row.priorityId}</span>
+                         <p id="name${data.id}" class="lead fw-normal mb-0">${data.name}</p><span class="px-3"> | </span>
+                         <span class="px-3 py-2 badge bg-${data.priority.name}">${data.priority.type != null ? data.priority.name : "null"}</span>
+                         <span id="priorityId-${row.id}" hidden>${data.priorityId}</span>
                      </li> 
-                     <li id="tags-${row.id}" class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">`;
+                     <li id="tags-${data.id}" class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">`;
             var list = '';
-            for(var tag of row.tags)
+            for(var tag of data.tags)
             {
-                list+=`<span class="me-2 px-3 py-1 badge rounded-pill bg-${tag.types??"dark"}">${tag.name}</span>`
+                list+=`<span class="me-2 px-3 py-1 badge rounded-pill bg-${tag.color??"dark"}">${tag.color}</span>`
             };
             return html + list + `</li>`;
         }

@@ -42,9 +42,15 @@ namespace TodosWebApp.Web.Controllers
         {
             int? userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             // data for datatable library
-            var data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId)
-                .Include(t => t.Priority).Include(t => t.Priority.Type)
-                .Include(t => t.Tags).ToList();
+            // var data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId)
+            //     .Include(t => t.Priority).ThenInclude(t => t.Type)
+            //     .Include(t => t.Tags).ToList();
+             var data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId).Select(t => new {
+                id = t.Id,
+                isDone = t.IsDone,
+                name = new { t.Name, t.Tags, t.Priority, t.Priority.Type },
+                dueDate = t.DueDate,
+             }).ToList();
             return Json(new 
             {
                 data = data

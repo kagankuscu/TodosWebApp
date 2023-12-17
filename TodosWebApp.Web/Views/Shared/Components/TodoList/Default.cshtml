@@ -30,7 +30,7 @@
                 <li id="tags-${row.id}" class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
                     @foreach(var tag in todo.Tags) 
                     {
-                        <span class="me-2 px-3 py-1 badge rounded-pill bg-@(tag.Types != null ? tag.Types : "dark")">@tag.Name</span>
+                        <span class="me-2 px-3 py-1 badge rounded-pill bg-@(tag.Color != null ? tag.Color : "dark")">@tag.Name</span>
                     }
                 </li>
             </td>
