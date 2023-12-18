@@ -57,13 +57,14 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Name</th>
+            <th>Full Name</th>
+            <th>Email</th>            
             <th>Active</th>
             <th>Role</th>
             <th>Total Task</th>
             <th>Completed Task</th>
+            <th>UnCompleted Task</th>
+            <th>Deleted Task</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -108,9 +109,8 @@
                     },
                 columns: [
                     { data: "id" },
-                    { data: "username" },
-                    { data: "email" },
                     { data: "fullname" },
+                    { data: "email" },
                     {
                         data: "isActive",
                         render: function (isActive) {
@@ -135,6 +135,8 @@
                     },
                     { data: "totalTask" },
                     { data: "completedTask" },
+                    { data: "unCompletedTask"},
+                    { data: "deletedTask" },
                     {
                         data: "id",
                         "render": function (id) {

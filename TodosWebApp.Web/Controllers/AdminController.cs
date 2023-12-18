@@ -43,12 +43,12 @@ namespace TodosWebApp.Web.Controllers
         {
             List<UserListDTO> users = _unitOfWork.Users.GetAll().Include(u => u.Todos).Select(u => new UserListDTO {
                 Id = u.Id,
-                Username = u.Username,
                 Email = u.Email,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
+                Fullname = $"{u.FirstName} {u.LastName}",
                 TotalTask = u.Todos.Count(),
                 CompletedTask = u.Todos.Count(t => t.IsDone),
+                UnCompletedTask = u.Todos.Count(t => !t.IsDone),
+                DeletedTask = u.Todos.Count(t => t.IsDeleted),
                 IsAdmin = u.IsAdmin,
                 IsActive = true
             }).ToList();
