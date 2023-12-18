@@ -49,6 +49,7 @@ namespace TodosWebApp.Web.Controllers
                 LastName = u.LastName,
                 TotalTask = u.Todos.Count(),
                 CompletedTask = u.Todos.Count(t => t.IsDone),
+                IsAdmin = u.IsAdmin,
                 IsActive = true
             }).ToList();
             return Json(users);
