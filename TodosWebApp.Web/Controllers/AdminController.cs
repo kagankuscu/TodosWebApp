@@ -54,5 +54,13 @@ namespace TodosWebApp.Web.Controllers
             }).ToList();
             return Json(users);
         }
+        public IActionResult Priorities()
+        {
+            return View();
+        }
+        public IActionResult Tags()
+        {
+            return View();
+        }
     }
 }
