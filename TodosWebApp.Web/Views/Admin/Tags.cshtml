@@ -33,6 +33,37 @@
 
             refillData();
             fillDllTagColor();
+            $("#btnSave").click(function (e) {
+                e.preventDefault();
+                if ($("#form").parsley().isValid() === false) {
+                    $('#form').parsley().validate();
+                    $('#form').addClass('was-validated');
+                } else {
+                    var tag = $("#tag").val();
+                    var color = $("#dllTagColor").val();
+                    $.ajax({
+                        url: "/Tag/SaveTag",
+                        type: "POST",
+                        data: { Name: tag, Color: color },
+                        success: function (result) {
+                            if (result) {
+                                DataTable.ajax.reload();
+                                toastr.success(result);
+                                $("#tag").val("");
+                                $("#dllTagColor").val("").trigger("change");
+                                $("#tag").focus();
+                            }
+                            else {
+                                alert(result.message);
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage.responseText);
+                        }
+                    });
+                }
+            });
+        });
         {
             DataTable = $("#table").DataTable({
                 ajax: {
