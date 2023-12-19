@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodosWebApp.BusinessLogic.Shared.Abstract;
 using TodosWebApp.DTOLayer;
+using TodosWebApp.DTOLayer.DTO;
 using TodosWebApp.Model.Entities;
 
 namespace TodosWebApp.Web.Controllers
@@ -53,6 +55,45 @@ namespace TodosWebApp.Web.Controllers
                 IsActive = true
             }).ToList();
             return Json(users);
+        }
+        [HttpPost]
+        public IActionResult GetUserById(int id)
+        {
+            return Json(_unitOfWork.Users.GetById(id));
+        }
+        [HttpPost]
+        public IActionResult UserRemove(int id)
+        {
+            try
+            {
+                User user = _unitOfWork.Users.GetById(id);
+                _unitOfWork.Users.Remove(user);
+                _unitOfWork.Save();
+                return Ok("User has been removed.");
+            }
+            catch
+            {
+                return BadRequest("User could not be removed.");
+            }
+        }
+        [HttpPost]
+        public IActionResult UserUpdate(UserUpdateDTO user)
+        {
+            try
+            {
+                User userReal = _unitOfWork.Users.GetById(user.Id);
+                userReal.FirstName = user.FirstName;
+                userReal.LastName = user.LastName;
+                userReal.Email = user.Email;
+                userReal.IsAdmin = user.IsAdmin;
+                _unitOfWork.Users.Update(userReal);
+                _unitOfWork.Save();
+                return Ok("User has been updated.");
+            }
+            catch
+            {
+                return BadRequest("User could not be updated.");
+            }
         }
         public IActionResult Priorities()
         {

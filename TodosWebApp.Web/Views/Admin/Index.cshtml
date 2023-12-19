@@ -74,30 +74,6 @@
     <script>
         $(document).ready(function () {
             var DataTable;
-
-            $("#btnSave").on("click", () => {
-
-                var firstName = $("#firstName").val();
-                var lastName = $("#lastName").val();
-                var email = $("#email").val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "/Admin/UserEdit",
-                    data: { firstName: firstName, lastName: lastName, email: email },
-                    success: function (data) {
-                        if (data) {
-                            $("#modalAdd").modal("hide");
-                            toastr.success("User has been edited.");
-                            DataTable.ajax.reload();
-                        }
-                    },
-                    error: (err) => {
-                        $("#modalAdd").modal("hide");
-                        toastr.error("User has not been edited.");
-                    }
-                });
-            });
             getAllUsers();
         });
 
@@ -152,30 +128,78 @@
 
 
         function userEdit(id) {
+            var userRoles = ["Admin", "User"];
             $.ajax({
-                type: "GET",
-                url: `/Admin/GetUserById/${id}`,
+                type: "POST",
+                url: `/Admin/GetUserById/`,
+                data: { id: id },
                 success: function (user) {
                     $("#firstName").val(user.firstName);
                     $("#lastName").val(user.lastName);
                     $("#email").val(user.email);
+                    $("#roleUser").empty();
+                    for (var item of userRoles) {
+                        $("#roleUser").append(new Option(item, item, false, !user.isAdmin ));
+                    }
 
                     $("#modalAdd").modal("show");
+
+                    $("#btnSave").click(function () {
+                        var firstName = $("#firstName").val();
+                        var lastName = $("#lastName").val();
+                        var email = $("#email").val();
+                        var isAdmin = $("#roleUser").val() === "Admin" ? true : false;                        
+                        user = {
+                            id: id,
+                            FirstName: firstName,
+                            LastName: lastName,
+                            Email: email,
+                            IsAdmin: isAdmin
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: `/Admin/UserUpdate/`,
+                            data: { user },
+                            success: function (data) {
+                                if (data) {
+                                    $("#modalAdd").modal("hide");
+                                    toastr.success("User has been edited.");
+                                    DataTable.ajax.reload();
+                                }
+                            },
+                            error: (err) => {
+                                $("#modalAdd").modal("hide");
+                                toastr.error("User has not been edited.");
+                            }
+                        });
+                    });
                 }
             })
         }
 
         function userRemove(id) {
-            $.ajax({
-                type: "POST",
-                url: `/Admin/UserRemove/${id}`,
-                success: function (data) {
-                    if (data) {
-                        toastr.success("User Deleted");
-                    }
-                },
-                error: (err) => {
-                    toastr.error("User Not Deleted");
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "User will be deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: `/Admin/UserRemove/`,
+                        data: { id: id },
+                        success: function (data) {
+                            if (data) {
+                                toastr.success("User Deleted");
+                                DataTable.ajax.reload();
+                            }
+                        },
+                        error: (err) => {
+                            toastr.error("User Not Deleted");
+                        }
+                    });
                 }
             });
         }
