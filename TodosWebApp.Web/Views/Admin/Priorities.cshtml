@@ -1,4 +1,180 @@
 ﻿@{
-    ViewData["Title"] = "Prioryties";
+    ViewData["Title"] = "Priorities";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<form id="form">
+    <a id="btnReset" class="btn btn-danger mb-3" onclick="resetForm()" hidden>Reset</a>
+    <div class="mb-3">
+        <label for="priority" class="form-label">Priority</label>
+        <input type="text" class="form-control mb-3" id="priority" placeholder="Enter Priority Name" required>
+        <label for="dllPriorityColor">Color</label>
+        <select id="dllPriorityColor" class="mb-3" style="width: 100%;" required></select>
+        <button id="btnSave" class="btn btn-primary mt-3" type="submit" style="width: 100%">Save</button>
+    </div>
+</form>
+<div>
+    <table id="table" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Priority</th>
+                <th scope="col">Color</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script>
+        var DataTable;
+        $(document).ready(function () {
+            $("#priority").focus();
+
+            refillData();
+            fillDllPriorityColor();
+            $("#btnSave").click(function (e) {
+                e.preventDefault();
+                if ($("#form").parsley().isValid() === false) {
+                    $('#form').parsley().validate();
+                    $('#form').addClass('was-validated');
+                } else {
+                    debugger;
+                    var priority = $("#priority").val();
+                    var color = $("#dllPriorityColor").val();
+                    var id = $("#btnSave").attr("updateId") != null ? $("#btnSave").attr("updateId") : 0;
+                    $.ajax({
+                        url: "/Priority/SavePriority",
+                        type: "POST",
+                        data: { Id: id, Name: priority, TypeId: color },
+                        success: function (result) {
+                            if (result) {
+                                DataTable.ajax.reload();
+                                toastr.success(result);
+                                $("#priority").val("");
+                                $("#dllPriorityColor").val("").trigger("change");
+                                $("#priority").focus();
+                                resetForm();
+                            }
+                            else {
+                                alert(result.message);
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage.responseText);
+                        }
+                    });
+                }
+            });
+        });
+        function editPriority(id) {
+            $.ajax({
+                url: "/Priority/GetPriorityById",
+                type: "GET",
+                data: { Id: id },
+                success: function (result) {
+                    if (result) {
+                        $("#priority").val(result.name);
+                        $("#dllPriorityColor").val(result.color).trigger("change");
+                        $("#btnSave").removeClass("btn-primary").addClass("btn-warning").attr("updateId", id).text("Update");
+                        $("#btnReset").attr("hidden", false);
+                        $("#priority").focus();
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+
+        function removePriority(id) {
+            $.ajax({
+                url: "/Priority/RemovePriority",
+                type: "POST",
+                data: { Id: id },
+                success: function (result) {
+                    if (result) {
+                        DataTable.ajax.reload();
+                        toastr.success(result);
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+
+        function refillData() {
+            DataTable = $("#table").DataTable({
+                ajax: {
+                    url: "/Priority/GetAllPriorities",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "type",
+                        render: function (data) {
+                            return `<span class="badge rounded-pill bg-${data.name}" style="width: 150px; height: 18px"> </span>`;
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return `
+                                        <div class="text-center">
+                                                <a onclick="editPriority(${data})" class="btn btn-primary text-white" style="cursor:pointer">
+                                                <i class="bi bi-pencil-fill"></i>
+                                            </a>
+                                                <a onclick="removePriority(${data})" class="btn btn-danger text-white" style="cursor:pointer">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        </div>
+                                    `;
+                        }
+                    }
+                ]
+            })
+        }
+
+        function fillDllPriorityColor() {
+            $.ajax({
+                url: "/Priority/GetAllPriorityColors",
+                type: "GET",
+                success: function (result) {
+                    if (result) {
+                        $("#dllPriorityColor").append(new Option());
+                        $.each(result, function (i, item) {
+                            $("#dllPriorityColor").append(new Option(item.name, item.id))
+                        });
+                        $("#dllPriorityColor").select2({
+                            placeholder: "Select Priority Color",
+                            theme: "classic"
+                        })
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+        function resetForm() {
+            $("#priority").val("");
+            $("#dllPriorityColor").val("").trigger("change");
+            $("#btnSave").removeClass("btn-warning").addClass("btn-primary").removeAttr("updateId").text("Save");
+            $("#btnReset").attr("hidden", true);
+            $("#priority").focus();
+        }
+    </script>
 }
