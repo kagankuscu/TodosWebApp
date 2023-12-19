@@ -47,5 +47,20 @@ namespace TodosWebApp.Web.Controllers
                 return BadRequest("Something went wrong. Save unsuccessful. Please try againg");
             }
         }
+        [HttpPost]
+        public IActionResult RemoveTag(int id)
+        {
+            try
+            {
+                _unitOfWork.Tags.Remove(_unitOfWork.Tags.GetById(id));
+                _unitOfWork.Save();
+                return Ok("Tag deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while deleting tag");
+                return BadRequest("Something went wrong. Delete unsuccessful. Please try againg");
+            }
+        }
     }
 }
