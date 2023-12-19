@@ -92,21 +92,31 @@
         }
 
         function removeTag(id) {
-            $.ajax({
-                url: "/Tag/RemoveTag",
-                type: "POST",
-                data: { Id: id },
-                success: function (result) {
-                    if (result) {
-                        DataTable.ajax.reload();
-                        toastr.success(result);
-                    }
-                    else {
-                        toastr.error(result);
-                    }
-                },
-                error: function (errormessage) {
-                    alert(errormessage);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                showCloseButton: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/Tag/RemoveTag",
+                        type: "POST",
+                        data: { Id: id },
+                        success: function (result) {
+                            if (result) {
+                                DataTable.ajax.reload();
+                                toastr.success(result);
+                            }
+                            else {
+                                toastr.error(result);
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage);
+                        }
+                    });
                 }
             });
         }

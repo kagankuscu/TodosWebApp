@@ -39,7 +39,6 @@
                     $('#form').parsley().validate();
                     $('#form').addClass('was-validated');
                 } else {
-                    debugger;
                     var priority = $("#priority").val();
                     var color = $("#dllPriorityColor").val();
                     var id = $("#btnSave").attr("updateId") != null ? $("#btnSave").attr("updateId") : 0;
@@ -91,21 +90,31 @@
         }
 
         function removePriority(id) {
-            $.ajax({
-                url: "/Priority/RemovePriority",
-                type: "POST",
-                data: { Id: id },
-                success: function (result) {
-                    if (result) {
-                        DataTable.ajax.reload();
-                        toastr.success(result);
-                    }
-                    else {
-                        toastr.error(result);
-                    }
-                },
-                error: function (errormessage) {
-                    alert(errormessage);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                showCloseButton: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/Priority/RemovePriority",
+                        type: "POST",
+                        data: { Id: id },
+                        success: function (result) {
+                            if (result) {
+                                DataTable.ajax.reload();
+                                toastr.success(result);
+                            }
+                            else {
+                                toastr.error(result);
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage);
+                        }
+                    });
                 }
             });
         }
