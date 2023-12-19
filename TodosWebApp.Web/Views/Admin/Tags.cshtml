@@ -1,0 +1,178 @@
+﻿@{
+    ViewData["Title"] = "Tags";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form id="form">
+
+    <a id="btnReset" class="btn btn-danger mb-3" onclick="resetForm()" hidden>Reset</a>
+    <div class="mb-3">       
+        <label for="tag" class="form-label">Tag</label>
+        <input type="text" class="form-control mb-3" id="tag" placeholder="Enter Tag Name" required>
+        <label for="dllTagColor">Color</label>
+        <select id="dllTagColor" class="mb-3" style="width: 100%;" required></select>
+        <button id="btnSave" class="btn btn-primary mt-3" type="submit" style="width: 100%">Save</button>
+    </div>
+</form>
+<div>
+    <table id="table" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Tag</th>
+                <th scope="col">Color</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script>
+        var DataTable;
+        $(document).ready(function () {
+            $("#tag").focus();
+
+            refillData();
+            fillDllTagColor();
+            $("#btnSave").click(function (e) {
+                e.preventDefault();
+                if ($("#form").parsley().isValid() === false) {
+                    $('#form').parsley().validate();
+                    $('#form').addClass('was-validated');
+                } else {
+                    var tag = $("#tag").val();
+                    var color = $("#dllTagColor").val();
+                    var id = $("#btnSave").attr("updateId") != null ? $("#btnSave").attr("updateId") : 0;
+                    $.ajax({
+                        url: "/Tag/SaveTag",
+                        type: "POST",
+                        data: { Id: id, Name: tag, Color: color },
+                        success: function (result) {
+                            if (result) {
+                                DataTable.ajax.reload();
+                                toastr.success(result);
+                                $("#tag").val("");
+                                $("#dllTagColor").val("").trigger("change");
+                                $("#tag").focus();
+                                resetForm();
+                            }
+                            else {
+                                alert(result.message);
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage.responseText);
+                        }
+                    });
+                }
+            });
+        });
+        function editTag(id) {
+            $.ajax({
+                url: "/Tag/GetTagById",
+                type: "GET",
+                data: { Id: id },
+                success: function (result) {
+                    if (result) {
+                        $("#tag").val(result.name);
+                        $("#dllTagColor").val(result.color).trigger("change");
+                        $("#btnSave").removeClass("btn-primary").addClass("btn-warning").attr("updateId", id).text("Update");
+                        $("#btnReset").attr("hidden", false);
+                        $("#tag").focus();
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
+
+        function removeTag(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                showCloseButton: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/Tag/RemoveTag",
+                        type: "POST",
+                        data: { Id: id },
+                        success: function (result) {
+                            if (result) {
+                                DataTable.ajax.reload();
+                                toastr.success(result);
+                            }
+                            else {
+                                toastr.error(result);
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage);
+                        }
+                    });
+                }
+            });
+        }
+
+        function refillData() 
+        {
+            DataTable = $("#table").DataTable({
+                ajax: {
+                    url: "/Tag/GetAllTags",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "color",
+                        render: function (data) {
+                            return `<span class="badge rounded-pill bg-${data}" style="width: 150px; height: 18px"> </span>`;
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return `
+                                <div class="text-center">
+                                    <a onclick="editTag(${data})" class="btn btn-primary text-white" style="cursor:pointer">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a onclick="removeTag(${data})" class="btn btn-danger text-white" style="cursor:pointer">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            })
+        }
+
+        function fillDllTagColor() {
+            var colors = ["", "primary", "secondary", "success", "danger", "warning", "info", "light", "dark"];
+            $.each(colors, function (i, color) {
+                $("#dllTagColor").append(`<option value="${color}">${color}</option>`);
+            });
+            $("#dllTagColor").select2({
+                placeholder: "Select Tag Color",
+                theme: "classic"
+            })
+        }        
+        function resetForm() {
+            $("#tag").val("");
+            $("#dllTagColor").val("").trigger("change");
+            $("#btnSave").removeClass("btn-warning").addClass("btn-primary").removeAttr("updateId").text("Save");
+            $("#btnReset").attr("hidden", true);
+            $("#tag").focus();
+        }
+    </script>
+}

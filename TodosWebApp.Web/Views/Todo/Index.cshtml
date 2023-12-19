@@ -39,7 +39,7 @@
                                             </div>
                                             <div class="d-flex flex-row align-items-center col-5">
                                                 <div class="input-group me-3 d-flex">
-                                                    <select asp-for="Tags" name="TagsId[]" class="js-example-basic-multiple" multiple="multiple" required>
+                                                    <select asp-for="Tags" name="TagsId[]" class="js-example-basic-multiple" multiple="multiple" style="width:100%;" required>
                                                     </select>
                                                 </div>
                                             </div>
@@ -108,6 +108,11 @@
         {
             var tags = [];
 
+            for(var tag of $("#Tags").select2("data"))
+            {
+                tags.push(tag.id);
+            }
+
             jsonData = {
                 id: id,
                 name: $("#name"+id).text(),
@@ -115,7 +120,7 @@
                 dueDate: $("#dueDate"+id).text(),
                 createdDate: $("#createdDate" + id).text(),
                 priorityId: $("#priorityId-" + id).text(),
-                tagsId: [1,2],
+                tagsId: tags,
             }
 
             console.log($("#Tags").text(),);
@@ -171,17 +176,17 @@
             })
         }
 
-        function nameHtml(data, row) {
+        function nameHtml(data, row) {            
             var html = `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                         <p id="name${data.id}" class="lead fw-normal mb-0">${data.name}</p><span class="px-3"> | </span>
-                         <span class="px-3 py-2 badge bg-${data.priority.name}">${data.priority.type != null ? data.priority.name : "null"}</span>
-                         <span id="priorityId-${row.id}" hidden>${data.priorityId}</span>
-                     </li> 
-                     <li id="tags-${data.id}" class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">`;
+                         <p id="name${row.id}" class="lead fw-normal mb-0">${data.name}</p><span class="px-3"> | </span>
+                         <span class="px-3 py-2 badge bg-${data.priority.type.name}">${data.priority.name != null ? data.priority.name : "null"}</span>
+                                 <span id="priorityId-${row.id}" hidden>${data.priority.id}</span>
+                     </li>
+                             <li id="tags-${row.id}" class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">`;
             var list = '';
             for(var tag of data.tags)
             {
-                list+=`<span class="me-2 px-3 py-1 badge rounded-pill bg-${tag.color??"dark"}">${tag.color}</span>`
+                list+=`<span class="me-2 px-3 py-1 badge rounded-pill bg-${tag.color??"dark"}">${tag.name}</span>`
             };
             return html + list + `</li>`;
         }
@@ -224,7 +229,7 @@
                 url: "/Priority/GetAllPriorities",
                 success: function(res) {
                     for(var item of res) {
-                        $("#PriorityId").append(new Option(item.type.name, item.typeId));
+                        $("#PriorityId").append(new Option(item.name, item.id));
                     }
                     $("#PriorityId").select2({
                         placeholder: "Select Priority",
