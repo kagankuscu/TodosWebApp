@@ -27,19 +27,43 @@ namespace TodosWebApp.Web.Controllers
         {
             return Json(_unitOfWork.Tags.GetAll().ToList());
         }
+        public IActionResult GetTagById(int id)
+        {
+            try
+            {
+                return Json(_unitOfWork.Tags.GetById(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting tag by id");
+                return BadRequest("Something went wrong. Please try again");
+            }
+        }
         [HttpPost]
         public IActionResult SaveTag(TagDTO tagDTO)
         {
             try
             {
 
-                _unitOfWork.Tags.Add(new Tag 
+                if (tagDTO.Id != 0)
                 {
-                    Name = tagDTO.Name,
-                    Color = tagDTO.Color
-                });
-                _unitOfWork.Save();
-                return Ok("Tag saved successfully");
+                    var tag = _unitOfWork.Tags.GetById(tagDTO.Id);
+                    tag.Name = tagDTO.Name;
+                    tag.Color = tagDTO.Color;
+                    _unitOfWork.Tags.Update(tag);
+                    _unitOfWork.Save();
+                    return Ok("Tag updated successfully");
+                }
+                else
+                {
+                    _unitOfWork.Tags.Add(new Tag
+                    {
+                        Name = tagDTO.Name,
+                        Color = tagDTO.Color
+                    });
+                    _unitOfWork.Save();
+                    return Ok("Tag saved successfully");
+                }
             }
             catch (Exception ex)
             {

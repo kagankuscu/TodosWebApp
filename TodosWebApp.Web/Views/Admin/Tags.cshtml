@@ -4,7 +4,9 @@
 }
 
 <form id="form">
-    <div class="mb-3">
+
+    <a id="btnReset" class="btn btn-danger mb-3" onclick="resetForm()" hidden>Reset</a>
+    <div class="mb-3">       
         <label for="tag" class="form-label">Tag</label>
         <input type="text" class="form-control mb-3" id="tag" placeholder="Enter Tag Name" required>
         <label for="dllTagColor">Color</label>
@@ -39,12 +41,14 @@
                     $('#form').parsley().validate();
                     $('#form').addClass('was-validated');
                 } else {
+                    debugger;
                     var tag = $("#tag").val();
                     var color = $("#dllTagColor").val();
+                    var id = $("#btnSave").attr("updateId") != null ? $("#btnSave").attr("updateId") : 0;
                     $.ajax({
                         url: "/Tag/SaveTag",
                         type: "POST",
-                        data: { Name: tag, Color: color },
+                        data: { Id: id, Name: tag, Color: color },
                         success: function (result) {
                             if (result) {
                                 DataTable.ajax.reload();
@@ -52,6 +56,7 @@
                                 $("#tag").val("");
                                 $("#dllTagColor").val("").trigger("change");
                                 $("#tag").focus();
+                                resetForm();
                             }
                             else {
                                 alert(result.message);
@@ -64,6 +69,28 @@
                 }
             });
         });
+        function editTag(id) {
+            $.ajax({
+                url: "/Tag/GetTagById",
+                type: "GET",
+                data: { Id: id },
+                success: function (result) {
+                    if (result) {
+                        $("#tag").val(result.name);
+                        $("#dllTagColor").val(result.color).trigger("change");
+                        $("#btnSave").removeClass("btn-primary").addClass("btn-warning").attr("updateId", id).text("Update");
+                        $("#btnReset").attr("hidden", false);
+                        $("#tag").focus();
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                },
+                error: function (errormessage) {
+                    alert(errormessage);
+                }
+            });
+        }
 
         function removeTag(id) {
             $.ajax({
@@ -131,5 +158,12 @@
                 theme: "classic"
             })
         }        
+        function resetForm() {
+            $("#tag").val("");
+            $("#dllTagColor").val("").trigger("change");
+            $("#btnSave").removeClass("btn-warning").addClass("btn-primary").removeAttr("updateId").text("Save");
+            $("#btnReset").attr("hidden", true);
+            $("#tag").focus();
+        }
     </script>
 }
