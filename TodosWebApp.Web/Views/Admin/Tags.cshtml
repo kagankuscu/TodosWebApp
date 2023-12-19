@@ -23,3 +23,60 @@
         </thead>
     </table>
 </div>
+
+@section Scripts
+{
+    <script>
+        var DataTable;
+        $(document).ready(function () {
+            $("#tag").focus();
+
+            refillData();
+            fillDllTagColor();
+        {
+            DataTable = $("#table").DataTable({
+                ajax: {
+                    url: "/Tag/GetAllTags",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "color",
+                        render: function (data) {
+                            return `<span class="badge rounded-pill bg-${data}" style="width: 150px; height: 18px"> </span>`;
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return `
+                                <div class="text-center">
+                                    <a onclick="editTag(${data})" class="btn btn-primary text-white" style="cursor:pointer">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a onclick="deleteTag(${data})" class="btn btn-danger text-white" style="cursor:pointer">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            })
+        }
+
+        function fillDllTagColor() {
+            var colors = ["", "primary", "secondary", "success", "danger", "warning", "info", "light", "dark"];
+            $.each(colors, function (i, color) {
+                $("#dllTagColor").append(`<option value="${color}">${color}</option>`);
+            });
+            $("#dllTagColor").select2({
+                placeholder: "Select Tag Color",
+                theme: "classic"
+            })
+        }        
+    </script>
+}
