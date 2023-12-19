@@ -2,3 +2,24 @@
     ViewData["Title"] = "Tags";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+
+<form id="form">
+    <div class="mb-3">
+        <label for="tag" class="form-label">Tag</label>
+        <input type="text" class="form-control mb-3" id="tag" placeholder="Enter Tag Name" required>
+        <label for="dllTagColor">Color</label>
+        <select id="dllTagColor" class="mb-3" style="width: 100%;" required></select>
+        <button id="btnSave" class="btn btn-primary mt-3" type="submit" style="width: 100%">Save</button>
+    </div>
+</form>
+<div>
+    <table id="table" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Tag</th>
+                <th scope="col">Color</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+    </table>
+</div>
