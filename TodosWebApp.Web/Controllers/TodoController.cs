@@ -33,9 +33,6 @@ namespace TodosWebApp.Web.Controllers
         [Route("/todo/index")]
         public async Task<IActionResult> Index()
         {
-            List<Todo> todos = _unitOfWork.Todos.GetAll().ToList();
-            todos = todos.OrderByDescending(x=>x.CreatedDate).ToList();
-            List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View();
         }
         public async Task<IActionResult> GetTodayTask()
