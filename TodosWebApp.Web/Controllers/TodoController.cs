@@ -31,11 +31,11 @@ namespace TodosWebApp.Web.Controllers
         [Route("/")]
         [Route("/todo")]
         [Route("/todo/index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
-        public async Task<IActionResult> GetTodayTask()
+        public IActionResult GetTodayTask()
         {
             int? userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             // data for datatable library

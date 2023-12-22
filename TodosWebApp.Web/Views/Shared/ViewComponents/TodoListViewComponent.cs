@@ -24,7 +24,7 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int type = 1)
+        public IViewComponentResult Invoke(int type = 1)
         {
             int? userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
 
