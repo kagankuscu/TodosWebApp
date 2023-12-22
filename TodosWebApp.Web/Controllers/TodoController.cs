@@ -55,7 +55,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> RemoveAJAX(int id)
+        public IActionResult RemoveAJAX(int id)
         {
             Todo todo = _unitOfWork.Todos.GetById(id);
             if(todo != null)
@@ -69,7 +69,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> History()
+        public IActionResult History()
         {
             int? userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<Todo> todos = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1) && todo.User.Id == userId).ToList();
@@ -79,13 +79,13 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Upcoming()
+        public IActionResult Upcoming()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(TodoViewModel todoViewModel)
+        public IActionResult Add(TodoViewModel todoViewModel)
         {
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (todoViewModel.DueDate.Year == 1)
@@ -105,7 +105,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Remove(int id)
+        public IActionResult Remove(int id)
         {
             _unitOfWork.Todos.Remove(_unitOfWork.Todos.GetById(id));
             _unitOfWork.Save();
@@ -113,14 +113,14 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Update(int id)
+        public IActionResult Update(int id)
         {
             Todo todo = _unitOfWork.Todos.GetAll(t => t.Id == id).Include(t=>t.Tags).FirstOrDefault()!;
             return View(_mapper.Map<TodoViewModel>(todo));
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> Update(TodoViewModel updateTodo)
+        public IActionResult Update(TodoViewModel updateTodo)
         {
             Todo real = _unitOfWork.Todos.GetAll(t => t.Id == updateTodo.Id).Include(t => t.Priority).Include(t => t.Tags).Include(t => t.User).First();
             
@@ -140,7 +140,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateIsDone(TodoViewModel updateTodoVM)
+        public IActionResult UpdateIsDone(TodoViewModel updateTodoVM)
         {
             _unitOfWork.Todos.Update(_mapper.Map<Todo>(updateTodoVM));
             _unitOfWork.Save();
