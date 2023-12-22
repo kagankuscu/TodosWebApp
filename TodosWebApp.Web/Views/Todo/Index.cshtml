@@ -1,0 +1,257 @@
+@{
+    ViewBag.title = "My Todos";
+}
+@model TodoViewModel
+
+<div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col">
+            <div class="card" id="list1" style="border-radius: .75rem; background-color: #eff1f2;">
+                <div class="card-body py-4 px-4 px-md-5">
+
+                    <partial name="_Header" model="@ViewBag.title" />
+
+                    <form id="form" asp-controller="todo" asp-action="add" method="post">
+                        <div class="pb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <input type="text" class="form-control form-control-lg" placeholder="Add new..." asp-for="@Model.Name" required="">
+                                            <span class="text-danger" ></span>
+                                            <div class="col-2 me-3">
+                                                @* <input type="hidden" asp-for="@Model.IsDone" /> *@
+                                                <select class="form-select" aria-label="Default select example" asp-for="PriorityId" required></select>
+                                            </div>
+                                            <div>
+                                                <input type="submit" class="btn btn-primary" value="Add" />
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div class="input-group">
+                                                <input type="datetime-local" asp-for="@Model.DueDate" class="form-control form-control-lg">
+                                                @* <input type="hidden" asp-for="@Model.CreatedDate"> *@
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center col-5">
+                                                <div class="input-group me-3 d-flex">
+                                                    <select asp-for="Tags" name="TagsId[]" class="js-example-basic-multiple" multiple="multiple" style="width:100%;" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>      
+                    </form>
+
+                    <br class="my-4">
+                                        
+                    <table class="table" id="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">Done</th>
+                            <th scope="col">Task</th>
+                            <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts 
+{
+    <script>
+        var DataTable;
+        refillData();
+
+        function refillData() {
+                ddlleriDoldur();
+                DataTable = $("#table").DataTable(
+                {
+                    ajax: "/todo/GetTodayTask",
+                    columns: [
+                        { 
+                            data: "isDone",
+                            render: (data, type, row) => {
+                                return isDoneHtml(data, row);
+                            }
+                        },
+                        { 
+                            data: "name",
+                            render: (data, _, row) => {
+                                return nameHtml(data, row);
+                            }
+                        },
+                        { 
+                            data: "dueDate",
+                            render: (data, type, row) => {
+                                return actionHtml(data, row);
+                            }
+                        }
+                    ]
+                }
+            );
+        }
+
+        function updateIsDone(id)
+        {
+            var tags = [];
+
+            for(var tag of $("#Tags").select2("data"))
+            {
+                tags.push(tag.id);
+            }
+
+            jsonData = {
+                id: id,
+                name: $("#name"+id).text(),
+                isDone: $("#isDone"+id).is(":checked"),
+                dueDate: $("#dueDate"+id).text(),
+                createdDate: $("#createdDate" + id).text(),
+                priorityId: $("#priorityId-" + id).text(),
+                tagsId: tags,
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "/todo/updateisdone",
+                data: jsonData,
+                success: (data) => {
+                    if (data["uptadedTodo"]["isDone"]) {
+                        toastr.success(`The recording was done successfully.`);
+                    }
+                    else {
+                        toastr.success(`The registration was successfully retrieved.`);
+                    }
+                    DataTable.ajax.reload();
+                },
+                error: function(error)
+                {
+                    alert(error);
+                }
+            });
+        }
+
+        function removeTask(id) {
+
+            Swal.fire({
+                title: 'Warning!',
+                text: 'Do you want to continue',
+                icon: 'warning',
+                confirmButtonText: 'Yes',
+                showCancelButton: true
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Task has been deleted.",
+                        icon: "success"
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: `/todo/removeAJAX/${id}`,
+                        success: (data) => {
+                            toastr.success(`The task was removed successfully.`);
+                            DataTable.ajax.reload();
+                        },
+                        error: (error) => {
+                            toastr.error(`An error occurred while deleting the task.`);
+                        }
+                    })
+                }
+            })
+        }
+
+        function nameHtml(data, row) {            
+            var html = `<li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                         <p id="name${row.id}" class="lead fw-normal mb-0">${data.name}</p><span class="px-3"> | </span>
+                         <span class="px-3 py-2 badge bg-${data.priority.type.name}">${data.priority.name != null ? data.priority.name : "null"}</span>
+                                 <span id="priorityId-${row.id}" hidden>${data.priority.id}</span>
+                     </li>
+                             <li id="tags-${row.id}" class="list-group-item px-4 pt-3 d-flex align-items-center flex-grow-1 border-0 bg-transparent">`;
+            var list = '';
+            for(var tag of data.tags)
+            {
+                list+=`<span class="me-2 px-3 py-1 badge rounded-pill bg-${tag.color??"dark"}">${tag.name}</span>`
+            };
+            return html + list + `</li>`;
+        }
+        function isDoneHtml(data, row) {
+            return `<li class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
+         <div class="form-check">
+             <input id="isDone${row.id}" class="form-check-input me-0" type="checkbox" aria-label="..." onclick="updateIsDone(${row.id})" ${data == true ? 'checked' : "" } />
+         </div>
+                  </li>`;
+        }
+        function actionHtml(data, row) {
+            return `<li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+            <div class="d-flex flex-row justify-content-center mb-1">
+                        <a href="/todo/update/${row.id}" class="text-info" data-mdb-toggle="tooltip" title="Edit todo"><i
+                                class="bi bi-pencil-fill me-3"></i></a>
+                        <a onClick="removeTask(${row.id})" class="text-danger" data-mdb-toggle="tooltip" title="Delete todo" asp-controller="todo" asp-action="remove">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                    <div class="text-center text-muted">
+                        <p class="small mb-0">${data}</p>
+                        <span id="dueDate${row.id}" hidden="hidden">${data}</span>
+                        <span id="createdDate${row.id}" hidden="hidden">${data}</span>
+                    </div>
+                </li>`;
+        }
+
+        $(function () {
+            $('#form').parsley().on('field:validated', function() {
+                    var ok = $('.parsley-error').length === 0;
+                })
+                .on('form:submit', function() {
+                    return true;
+                });
+            });
+
+        function ddlleriDoldur() {
+            $.ajax({
+                type: "GET",
+                url: "/Priority/GetAllPriorities",
+                success: function(res) {
+                    for(var item of res) {
+                        $("#PriorityId").append(new Option(item.name, item.id));
+                    }
+                    $("#PriorityId").select2({
+                        placeholder: "Select Priority",
+                        theme: "classic"
+                    })
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "/Tag/GetAllTags",
+                success: function(res) 
+                        {
+                            for(var item of res)
+                            {
+                                $("#Tags").append(new Option(item.name, item.id));
+                            }
+                            $("#Tags").select2(
+                                {
+                                    placeholder: "Select Tags",
+                                    theme: "classic",
+                                }
+                            )
+                        }
+            })
+        }
+    </script>
+}

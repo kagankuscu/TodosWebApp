@@ -1,0 +1,118 @@
+@{
+  Layout = "_UserLayout";
+}
+
+@model UserViewModel
+<div class="d-flex container align-items-center justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="row">
+      <div class="card">
+        <div class="card-body my-3">
+          <a href="/User/Login" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+            <h5>Back</h5>
+          </a>
+          <h2 class="card-title mb-4 text-center">
+            Register
+            <hr class="my-4">
+          </h2>
+          <form id="form" asp-controller="User" asp-action="Register" method="POST">
+            <div class="form-group mb-3">
+              <label for="FirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control mb-2" placeholder="Enter First Name" asp-for="FirstName" required data-parsley-trigger="change">
+            </div>
+            <div class="form-group mb-3">
+              <label for="LastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control mb-2" placeholder="Enter Last Name" asp-for="LastName" required data-parsley-trigger="change">
+            </div>
+            <div class="form-group mb-3">
+              <label for="Username" class="form-label">Username</label>
+              <input type="text" class="form-control mb-2" placeholder="Enter Username" asp-for="Username" required data-parsley-trigger="change">
+            </div>
+            <div class="form-group mb-3">
+              <label for="Email" class="form-label">Email</label>
+              <input type="email" class="form-control mb-2" placeholder="Enter Email" asp-for="Email" required data-parsley-trigger="change">
+            </div>
+            <div class="form-group mb-3">
+              <label for="Password" class="form-label">Password </label>
+              <input type="password" class="form-control mb-2" placeholder="Enter Password" asp-for="Password" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
+            </div>
+            <div class="form-group mb-3">
+              <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control mb-2" placeholder="Enter Confirm Password" asp-for="ConfirmPassword" required data-parsley-trigger="change" placeholder="Password" required data-parsley-minlength="5" required data-parsley-maxlength="40" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$">
+            </div>
+            <div class="col">
+              <button id="btnSubmit" type="submit" class="btn btn-primary btn-lg w-100">Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+  <script>
+    $(document).ready(() => {
+
+      $("#btnSubmit").click(function () {
+        event.preventDefault();
+        if ($("#form").parsley().isValid() === false) {
+          $('#form').parsley().validate();
+          $('#form').addClass('was-validated');
+        } else {
+
+        var password = $("#Password").val()
+        var confirmPassword = $("#ConfirmPassword").val()
+        // Check Password and ComfirmPassword field is match.
+        if (password !== confirmPassword) {
+          var confirmPasswordId = $("#ConfirmPassword").attr("data-parsley-id");
+          $("#ConfirmPassword").removeClass("parsley-success").addClass("parsley-error");
+          $(`ul[id=parsley-id-${confirmPasswordId}]`).addClass("filled");
+          if ($(`ul[id=parsley-id-${confirmPasswordId}] li`).length === 0) {
+            $("#ConfirmPassword").parsley().addError("confirm-error", { message: "Confirm Password is not match.", updateClass: true });
+          }
+        } else {
+          $(".parsley-confirm-error").remove();
+        }
+        var newUser = {
+          firstname: $("#FirstName").val(),
+          lastname: $("#LastName").val(),
+          username: $("#Username").val(),
+          email: $("#Email").val(),
+          password: $("#Password").val(),
+          confirmPassword: $("#ConfirmPassword").val(),
+        }
+        $.ajax({
+          type: "POST",
+          url: "/User/Register",
+          data: newUser,
+          success: function (data) {
+            if (data) {
+              if(data["status"] == "error") {
+                toastr.error("Registiration was unsuccessfull. " + data["message"]);
+              } else {
+                window.location.href = "/User/Login";
+              }
+            }
+          },
+          error: function (error) {
+            toastr.error(error.responseText
+            );
+          }
+        });
+        }
+      });
+
+      function checkUser(user) {
+        return $.ajax({
+          type: "POST",
+          url: `/User/CheckUser/${user}`,
+          data: {
+            username: $("#Username").val(),
+            email: $("#Email").val(),
+          },
+        });
+      }
+    });
+  </script>
+}

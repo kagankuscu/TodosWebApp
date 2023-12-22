@@ -1,0 +1,76 @@
+@{
+    Layout = "_ViewComponentLayout";
+}
+@model TodoViewModel
+
+<form asp-controller="todo" asp-action="@ViewBag.title" method="post">
+    <div class="pb-2">
+        <div class="card">
+            <div class="card-body">
+                    <div class="d-flex flex-row align-items-center">
+                        <input type="text" class="form-control form-control-lg" placeholder="Add new..." asp-for="@Model.Name">
+                        <span class="text-danger" ></span>
+                        <div class="col-2 me-3">
+                            <select class="form-select" aria-label="Default select example" asp-for="PriorityId" required>
+                                @foreach(var priority in ViewBag.priorities)
+                                {
+                                    <option value=@priority.Id>@priority.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <input type="submit" class="btn btn-primary" value="@ViewBag.title" />
+                            <input type="hidden" asp-for="@Model.IsDone" />
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="pb-2">
+        <div class="card">
+            <div class="card-body">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="input-group">
+                            <input type="datetime-local" asp-for="@Model.DueDate" class="form-control form-control-lg">
+                        </div>
+                        <div class="d-flex flex-row align-items-center col-5">
+                            <div class="input-group me-3 d-flex">
+                                <select asp-for="Tags" name="TagsId[]" class="js-example-basic-multiple" multiple="multiple" style="width: 100%;" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>      
+</form>
+<span id="todoId" hidden>@Model.Id</span>
+@section Scripts {
+    <script>
+        $.ajax({
+            type: "POST",
+            url: "/Todo/GetById",
+            data: { id: $("#todoId").text()},
+            success: function(resTodo) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Tag/GetAllTags",
+                    success: function(resTag) {
+                            console.log(resTag);
+                            $("#Tags").empty();
+                            for(var item of resTag)
+                            {
+                                console.log(resTodo.tags.find(y => y.id == item.id) != null);
+                                $("#Tags").append(new Option(item.name, item.id, false, resTodo.tags.find(y => y.id == item.id) != null));
+                            }
+                            $("#Tags").select2({
+                                    placeholder: "Select Tags",
+                                    theme: "classic",
+                                }
+                            )
+                        }
+                });
+            }
+        });
+    </script>
+}

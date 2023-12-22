@@ -1,0 +1,207 @@
+@{
+    ViewBag.Title = "Admin Page";
+    Layout = "_AdminLayout";
+}
+
+<h2>Admin Panel</h2>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel">Edit User</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Another label</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <div class="mb-3">
+                            <label for="roleUser" class="form-label">User Role</label>
+                            <select id="roleUser" class="form-select" style="width:100%"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="btnSave" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="userTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Full Name</th>
+            <th>Email</th>            
+            <th>Active</th>
+            <th>Role</th>
+            <th>Total Task</th>
+            <th>Completed Task</th>
+            <th>UnCompleted Task</th>
+            <th>Deleted Task</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var DataTable;
+            getAllUsers();
+        });
+
+        function getAllUsers() {
+            DataTable = $('#userTable').DataTable({
+                ajax: {
+                        url: "/Admin/GetAllUsers",
+                        dataSrc: ""
+                    },
+                columns: [
+                    { data: "id" },
+                    { data: "fullname" },
+                    { data: "email" },
+                    {
+                        data: "isActive",
+                        render: function (isActive) {
+                            if (isActive) {
+                                return "Active";
+                            }
+                            else {
+                                return "Passive";
+                            }
+                        }
+                    },
+                    {
+                        data: "isAdmin",
+                        render: function (isAdmin) {
+                            if (isAdmin) {
+                                return "Admin";
+                            }
+                            else {
+                                return "User";
+                            }
+                        }
+                    },
+                    { data: "totalTask" },
+                    { data: "completedTask" },
+                    { data: "unCompletedTask"},
+                    { data: "deletedTask" },
+                    {
+                        data: "id",
+                        "render": function (id) {
+                            return `
+                                    <a onclick="userEdit(${id})" class="btn btn-warning">Edit</a> |
+                                    <a onclick="userRemove(${id})" class="btn btn-danger">Delete</a>
+                                    `;
+                        }
+                    }
+                ]
+            });
+        }
+
+
+        function userEdit(id) {
+            var userRoles = ["Admin", "User"];
+            $.ajax({
+                type: "POST",
+                url: `/Admin/GetUserById/`,
+                data: { id: id },
+                success: function (user) {
+                    $("#firstName").val(user.firstName);
+                    $("#lastName").val(user.lastName);
+                    $("#email").val(user.email);
+                    $("#roleUser").empty();
+                    for (var item of userRoles) {
+                        $("#roleUser").append(new Option(item, item, false, !user.isAdmin ));
+                    }
+
+                    $("#modalAdd").modal("show");
+
+                    $("#btnSave").click(function () {
+                        var firstName = $("#firstName").val();
+                        var lastName = $("#lastName").val();
+                        var email = $("#email").val();
+                        var isAdmin = $("#roleUser").val() === "Admin" ? true : false;                        
+                        user = {
+                            id: id,
+                            FirstName: firstName,
+                            LastName: lastName,
+                            Email: email,
+                            IsAdmin: isAdmin
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: `/Admin/UserUpdate/`,
+                            data: { user },
+                            success: function (data) {
+                                if (data) {
+                                    $("#modalAdd").modal("hide");
+                                    toastr.success("User has been edited.");
+                                    DataTable.ajax.reload();
+                                }
+                            },
+                            error: (err) => {
+                                $("#modalAdd").modal("hide");
+                                toastr.error("User has not been edited.");
+                            }
+                        });
+                    });
+                }
+            })
+        }
+
+        function userRemove(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "User will be deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: `/Admin/UserRemove/`,
+                        data: { id: id },
+                        success: function (data) {
+                            if (data) {
+                                toastr.success("User Deleted");
+                                DataTable.ajax.reload();
+                            }
+                        },
+                        error: (err) => {
+                            toastr.error("User Not Deleted");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

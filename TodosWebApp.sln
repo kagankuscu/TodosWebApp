@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodosWebApp.DataAccess", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodosWebApp.BusinessLogic", "TodosWebApp.BusinessLogic\TodosWebApp.BusinessLogic.csproj", "{F69F41DD-47AD-4CEF-81EC-7DB1E7EE230D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodosWebApp.Model", "TodosWebApp.Model\TodosWebApp.Model.csproj", "{C0BB61F1-FCD0-416F-8F85-42382C596CF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodosWebApp.DTOLayer", "TodosWebApp.DTOLayer\TodosWebApp.DTOLayer.csproj", "{E82F4C32-DECC-435A-B290-99006A60E8FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{F69F41DD-47AD-4CEF-81EC-7DB1E7EE230D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F69F41DD-47AD-4CEF-81EC-7DB1E7EE230D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F69F41DD-47AD-4CEF-81EC-7DB1E7EE230D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0BB61F1-FCD0-416F-8F85-42382C596CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0BB61F1-FCD0-416F-8F85-42382C596CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0BB61F1-FCD0-416F-8F85-42382C596CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0BB61F1-FCD0-416F-8F85-42382C596CF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E82F4C32-DECC-435A-B290-99006A60E8FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E82F4C32-DECC-435A-B290-99006A60E8FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E82F4C32-DECC-435A-B290-99006A60E8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E82F4C32-DECC-435A-B290-99006A60E8FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
