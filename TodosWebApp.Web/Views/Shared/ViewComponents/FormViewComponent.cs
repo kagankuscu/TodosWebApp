@@ -20,7 +20,7 @@ namespace TodosWebApp.Web.Views.Shared.ViewComponents
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string action, TodoViewModel formModel)
+        public IViewComponentResult Invoke(string action, TodoViewModel formModel)
         {
             List<Priority> priorities = _unitOfWork.Priorities.GetAll().Include(p => p.Type).ToList();
             ViewBag.title = action;

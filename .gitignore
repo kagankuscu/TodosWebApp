@@ -477,3 +477,4 @@ $RECYCLE.BIN/
 *.lnk
 
 /TodosWebApp.Web/wwwroot/lib
+TodosWebApp.Web/appsettings.json

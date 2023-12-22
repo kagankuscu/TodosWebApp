@@ -31,20 +31,13 @@ namespace TodosWebApp.Web.Controllers
         [Route("/")]
         [Route("/todo")]
         [Route("/todo/index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<Todo> todos = _unitOfWork.Todos.GetAll().ToList();
-            todos = todos.OrderByDescending(x=>x.CreatedDate).ToList();
-            List<TodoViewModel> todosVM = _mapper.Map<List<TodoViewModel>>(todos);
             return View();
         }
-        public async Task<IActionResult> GetTodayTask()
+        public IActionResult GetTodayTask()
         {
             int? userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            // data for datatable library
-            // var data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId)
-            //     .Include(t => t.Priority).ThenInclude(t => t.Type)
-            //     .Include(t => t.Tags).ToList();
              var data = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date == DateTime.Today && todo.User.Id == userId).Select(t => new {
                 id = t.Id,
                 isDone = t.IsDone,
@@ -58,7 +51,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> RemoveAJAX(int id)
+        public IActionResult RemoveAJAX(int id)
         {
             Todo todo = _unitOfWork.Todos.GetById(id);
             if(todo != null)
@@ -72,7 +65,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> History()
+        public IActionResult History()
         {
             int? userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<Todo> todos = _unitOfWork.Todos.GetAll(todo => todo.DueDate.Date < DateTime.Now.AddDays(-1) && todo.User.Id == userId).ToList();
@@ -82,13 +75,13 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Upcoming()
+        public IActionResult Upcoming()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(TodoViewModel todoViewModel)
+        public IActionResult Add(TodoViewModel todoViewModel)
         {
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (todoViewModel.DueDate.Year == 1)
@@ -108,7 +101,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Remove(int id)
+        public IActionResult Remove(int id)
         {
             _unitOfWork.Todos.Remove(_unitOfWork.Todos.GetById(id));
             _unitOfWork.Save();
@@ -116,14 +109,14 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Update(int id)
+        public IActionResult Update(int id)
         {
             Todo todo = _unitOfWork.Todos.GetAll(t => t.Id == id).Include(t=>t.Tags).FirstOrDefault()!;
             return View(_mapper.Map<TodoViewModel>(todo));
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> Update(TodoViewModel updateTodo)
+        public IActionResult Update(TodoViewModel updateTodo)
         {
             Todo real = _unitOfWork.Todos.GetAll(t => t.Id == updateTodo.Id).Include(t => t.Priority).Include(t => t.Tags).Include(t => t.User).First();
             
@@ -143,7 +136,7 @@ namespace TodosWebApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateIsDone(TodoViewModel updateTodoVM)
+        public IActionResult UpdateIsDone(TodoViewModel updateTodoVM)
         {
             _unitOfWork.Todos.Update(_mapper.Map<Todo>(updateTodoVM));
             _unitOfWork.Save();
