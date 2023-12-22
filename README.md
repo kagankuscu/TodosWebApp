@@ -105,5 +105,5 @@ Bu projede, sunum katmanı ASP.NET Core MVC kullanılarak oluşturulmuştur. Uyg
 
 **Drop List**
 
-![Priorities](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Prioritiespng)
+![Priorities](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Priorities.png)
 ![Tags](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Tags.png)
