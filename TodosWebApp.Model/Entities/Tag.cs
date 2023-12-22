@@ -7,7 +7,7 @@ namespace TodosWebApp.Model.Entities
 {
     public class Tag : BaseModel
     {
-        public string Color { get; set; }
+        public string Color { get; set; } = null!;
         public virtual ICollection<Todo> Todos { get; set; } = new List<Todo>();
     }
 }
