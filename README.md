@@ -82,28 +82,28 @@ Bu projede, sunum katmanı ASP.NET Core MVC kullanılarak oluşturulmuştur. Uyg
 
 **Login**
 
-![Login](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Login.png)
-![Register](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Register.png)
+![Login](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/Login.png)
+![Register](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/Register.png)
 
 ---
 
 **Admin Paneli**
 
-![AdminPanel](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/AdminPanel.png)
-![AdminPriorityPanel](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/AdminPriority.png)
-![AdminTagPanel](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/AdminTags.png)
+![AdminPanel](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/AdminPanel.png)
+![AdminPriorityPanel](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/AdminPriority.png)
+![AdminTagPanel](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/AdminTags.png)
 
 ---
 
 **Ana Sayfa**
 
-![MainPage](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/MainPage.png)
-![Upcoming](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Upcoming.png)
-![History](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/History.png)
+![MainPage](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/MainPage.png)
+![Upcoming](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/Upcoming.png)
+![History](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/History.png)
 
 ---
 
 **Drop List**
 
-![Priorities](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Priorities.png)
-![Tags](https://github.com/kagankuscu/TodosWebApp/blob/ReadmeFile/Images/Tags.png)
+![Priorities](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/Priorities.png)
+![Tags](https://raw.githubusercontent.com/kagankuscu/TodosWebApp/main/Images/Tags.png)
